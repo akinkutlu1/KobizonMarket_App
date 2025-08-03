@@ -4,12 +4,14 @@ import 'screens/splash_screen.dart';
 import 'controllers/cart_controller.dart';
 import 'controllers/product_controller.dart';
 import 'controllers/navigation_controller.dart';
+import 'controllers/location_controller.dart';
 
 void main() {
   // Controllers'ları başlat
   Get.put(CartController());
   Get.put(ProductController());
   Get.put(NavigationController());
+  Get.put(LocationController());
   
   runApp(const GroceriesApp());
 }

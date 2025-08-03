@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/product_controller.dart';
 import '../widgets/product_card.dart';
+import 'category_products_screen.dart';
 
 class CategoriesScreen extends GetView<ProductController> {
   const CategoriesScreen({super.key});
@@ -9,109 +10,173 @@ class CategoriesScreen extends GetView<ProductController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Kategoriler'),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          // Categories List
-          Container(
-            height: 60,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: controller.categories.length,
-              itemBuilder: (context, index) {
-                final category = controller.categories[index];
-                return Obx(() {
-                  final isSelected = controller.selectedCategory == category;
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      left: index == 0 ? 0 : 12,
-                      right: index == controller.categories.length - 1 ? 0 : 0,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              const Text(
+                'Ürün Bul',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              
+              const SizedBox(height: 20),
+              
+              // Search Bar
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8F9FA),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                      size: 24,
                     ),
-                    child: GestureDetector(
-                      onTap: () {
-                        controller.setSelectedCategory(category);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        decoration: BoxDecoration(
-                          color: isSelected ? const Color(0xFF53B175) : Colors.white,
-                          borderRadius: BorderRadius.circular(25),
-                          border: Border.all(
-                            color: isSelected ? const Color(0xFF53B175) : Colors.grey.shade300,
-                          ),
-                        ),
-                        child: Text(
-                          category,
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.black87,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                    const SizedBox(width: 12),
+                    const Text(
+                      'Mağaza Ara',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
                       ),
                     ),
-                  );
-                });
-              },
-            ),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 32),
+              
+              // Categories Grid
+              Expanded(
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 1.1,
+                  children: [
+                    _buildCategoryCard(
+                      title: 'Taze Meyve & Sebze',
+                      imagePath: 'assets/images/pngfuel6.png',
+                      backgroundColor: const Color(0xFFF0F8F0),
+                      onTap: () => _navigateToCategory('Fruits', 'Taze Meyve & Sebze'),
+                    ),
+                    _buildCategoryCard(
+                      title: 'Yemeklik Yağ & Sade Yağ',
+                      imagePath: 'assets/images/pngfuel8.png',
+                      backgroundColor: const Color(0xFFFFF8F0),
+                      onTap: () => _navigateToCategory('Oils', 'Yemeklik Yağ & Sade Yağ'),
+                    ),
+                    _buildCategoryCard(
+                      title: 'Et & Balık',
+                      imagePath: 'assets/images/pngfuel9.png',
+                      backgroundColor: const Color(0xFFFFF0F0),
+                      onTap: () => _navigateToCategory('Meat', 'Et & Balık'),
+                    ),
+                    _buildCategoryCard(
+                      title: 'Fırın & Atıştırmalıklar',
+                      imagePath: 'assets/images/pngfuel7.png',
+                      backgroundColor: const Color(0xFFF8F0FF),
+                      onTap: () => _navigateToCategory('Bakery', 'Fırın & Atıştırmalıklar'),
+                    ),
+                    _buildCategoryCard(
+                      title: 'Süt Ürünleri & Yumurta',
+                      imagePath: 'assets/images/pngfuel5.png',
+                      backgroundColor: const Color(0xFFFFFEE0),
+                      onTap: () => _navigateToCategory('Dairy', 'Süt Ürünleri & Yumurta'),
+                    ),
+                    _buildCategoryCard(
+                      title: 'İçecekler',
+                      imagePath: 'assets/images/pngfuel4.png',
+                      backgroundColor: const Color(0xFFF0F8FF),
+                      onTap: () => _navigateToCategory('Beverages', 'İçecekler'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          
-          const SizedBox(height: 20),
-          
-          // Products Grid
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Obx(() => Text(
-                        controller.selectedCategory,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      )),
-                      Obx(() => Text(
-                        '${controller.products.length} ürün',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      )),
-                    ],
-                  ),
-                  
-                  const SizedBox(height: 16),
-                  
-                  Expanded(
-                    child: GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.75,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                      ),
-                      itemCount: controller.products.length,
-                      itemBuilder: (context, index) {
-                        return ProductCard(
-                          product: controller.products[index],
-                        );
-                      },
-                    ),
-                  ),
-                ],
+        ),
+      ),
+    );
+  }
+
+  void _navigateToCategory(String categoryName, String categoryTitle) {
+    controller.setSelectedCategory(categoryName);
+    Get.to(() => CategoryProductsScreen(
+      categoryName: categoryName,
+      categoryTitle: categoryTitle,
+    ));
+  }
+
+  Widget _buildCategoryCard({
+    required String title,
+    required String imagePath,
+    required Color backgroundColor,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Category Image
+            Expanded(
+              flex: 3,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
-          ),
-        ],
+            
+            // Category Title
+            Expanded(
+              flex: 1,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'home_screen.dart';
 import 'categories_screen.dart';
 import 'cart_screen.dart';
 import 'profile_screen.dart';
+import 'favourite_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -92,6 +93,7 @@ class MainScreen extends GetView<NavigationController> {
     HomeScreen(),
     CategoriesScreen(),
     CartScreen(),
+    FavouriteScreen(),
     ProfileScreen(),
   ];
 
@@ -104,16 +106,16 @@ class MainScreen extends GetView<NavigationController> {
         onTap: (index) {
           controller.changePage(index);
         },
-        items: const [
+                items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Ana Sayfa',
+            icon: Icon(Icons.store_outlined),
+            activeIcon: Icon(Icons.store),
+            label: 'Market',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.category_outlined),
-            activeIcon: Icon(Icons.category),
-            label: 'Kategoriler',
+            icon: Icon(Icons.explore_outlined),
+            activeIcon: Icon(Icons.explore),
+            label: 'Keşfet',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart_outlined),
@@ -121,9 +123,14 @@ class MainScreen extends GetView<NavigationController> {
             label: 'Sepet',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_outline),
+            activeIcon: Icon(Icons.favorite),
+            label: 'Favoriler',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
-            label: 'Profil',
+            label: 'Hesap',
           ),
         ],
       )),

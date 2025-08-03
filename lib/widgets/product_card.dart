@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/product.dart';
 import '../controllers/cart_controller.dart';
+import '../controllers/product_controller.dart';
 
 class ProductCard extends GetView<CartController> {
   final Product product;
@@ -10,6 +11,8 @@ class ProductCard extends GetView<CartController> {
     super.key,
     required this.product,
   });
+  
+  ProductController get productController => Get.find<ProductController>();
 
   @override
   Widget build(BuildContext context) {
@@ -50,18 +53,30 @@ class ProductCard extends GetView<CartController> {
                    Positioned(
                      top: 8,
                      right: 8,
-                     child: Container(
-                       padding: const EdgeInsets.all(4),
-                       decoration: BoxDecoration(
-                         color: Colors.white.withOpacity(0.9),
-                         borderRadius: BorderRadius.circular(12),
+                     child: Obx(() => GestureDetector(
+                       onTap: () {
+                         final productId = int.tryParse(product.id);
+                         if (productId != null) {
+                           productController.toggleFavorite(productId);
+                         }
+                       },
+                       child: Container(
+                         padding: const EdgeInsets.all(4),
+                         decoration: BoxDecoration(
+                           color: Colors.white.withOpacity(0.9),
+                           borderRadius: BorderRadius.circular(12),
+                         ),
+                         child: Icon(
+                           productController.isFavorite(int.tryParse(product.id) ?? 0)
+                               ? Icons.favorite
+                               : Icons.favorite_border,
+                           color: productController.isFavorite(int.tryParse(product.id) ?? 0)
+                               ? Colors.red
+                               : Colors.grey,
+                           size: 20,
+                         ),
                        ),
-                       child: Icon(
-                         product.isFavorite ? Icons.favorite : Icons.favorite_border,
-                         color: product.isFavorite ? Colors.red : Colors.grey,
-                         size: 20,
-                       ),
-                     ),
+                     )),
                    ),
                  ],
                ),

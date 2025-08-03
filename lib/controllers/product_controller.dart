@@ -6,10 +6,17 @@ class ProductController extends GetxController {
   final RxList<Product> _products = <Product>[].obs;
   final RxString _selectedCategory = 'All'.obs;
   final RxString _searchQuery = ''.obs;
+  final RxSet<int> _favouriteProductIds = <int>{}.obs;
 
   List<Product> get products => _products;
   String get selectedCategory => _selectedCategory.value;
   String get searchQuery => _searchQuery.value;
+  Set<int> get favouriteProductIds => _favouriteProductIds;
+  
+  List<Product> get favouriteProducts {
+    return SampleData.products.where((product) => 
+      _favouriteProductIds.contains(int.tryParse(product.id))).toList();
+  }
 
   @override
   void onInit() {
@@ -63,12 +70,15 @@ class ProductController extends GetxController {
 
   List<String> get categories => SampleData.categories;
 
-  void toggleFavorite(String productId) {
-    final index = _products.indexWhere((product) => product.id == productId);
-    if (index != -1) {
-      final product = _products[index];
-      final updatedProduct = product.copyWith(isFavorite: !product.isFavorite);
-      _products[index] = updatedProduct;
+  void toggleFavorite(int productId) {
+    if (_favouriteProductIds.contains(productId)) {
+      _favouriteProductIds.remove(productId);
+    } else {
+      _favouriteProductIds.add(productId);
     }
+  }
+  
+  bool isFavorite(int productId) {
+    return _favouriteProductIds.contains(productId);
   }
 } 

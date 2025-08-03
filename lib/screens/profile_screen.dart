@@ -7,295 +7,262 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-             appBar: AppBar(
-         title: const Text('Profil'),
-         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              // Edit profile functionality
-            },
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Profile Header
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Profile Header
+              Row(
                 children: [
-                  // Profile Picture
+                  // Profile Image
                   Container(
-                    width: 100,
-                    height: 100,
+                    width: 80,
+                    height: 80,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF53B175),
-                      borderRadius: BorderRadius.circular(50),
+                      shape: BoxShape.circle,
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xFFFF6B9D), Color(0xFF4ECDC4)],
+                      ),
                     ),
-                    child: const Icon(
-                      Icons.person,
-                      size: 50,
-                      color: Colors.white,
+                    child: const Center(
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 40,
+                      ),
                     ),
                   ),
                   
-                  const SizedBox(height: 16),
+                  const SizedBox(width: 16),
                   
-                                     // User Name
-                   const Text(
-                     'Ahmet Yılmaz',
-                     style: TextStyle(
-                       fontSize: 24,
-                       fontWeight: FontWeight.bold,
-                       color: Colors.black87,
-                     ),
-                   ),
-                   
-                   const SizedBox(height: 4),
-                   
-                   // User Email
-                   const Text(
-                     'ahmet.yilmaz@example.com',
-                     style: TextStyle(
-                       fontSize: 16,
-                       color: Colors.grey,
-                     ),
-                   ),
-                  
-                  const SizedBox(height: 16),
-                  
-                                     // Stats Row
-                   Row(
-                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                     children: [
-                       _buildStatItem('Siparişler', '12'),
-                       _buildStatItem('Favoriler', '8'),
-                       _buildStatItem('Yorumlar', '5'),
-                     ],
-                   ),
+                  // User Info
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Text(
+                              'Afsar Hossen',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF53B175),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'lmshuvo97@gmail.com',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
-            
-            const SizedBox(height: 24),
-            
-                         // Menu Items
-             _buildMenuItem(
-               icon: Icons.shopping_bag_outlined,
-               title: 'Siparişlerim',
-               subtitle: 'Sipariş durumunu kontrol edin',
-               onTap: () {},
-             ),
-             
-             _buildMenuItem(
-               icon: Icons.favorite_border,
-               title: 'Favoriler',
-               subtitle: 'Kaydedilen ürünleriniz',
-               onTap: () {},
-             ),
-             
-             _buildMenuItem(
-               icon: Icons.location_on_outlined,
-               title: 'Teslimat Adresi',
-               subtitle: 'Adreslerinizi yönetin',
-               onTap: () {},
-             ),
-             
-             _buildMenuItem(
-               icon: Icons.payment_outlined,
-               title: 'Ödeme Yöntemleri',
-               subtitle: 'Ödeme seçeneklerinizi yönetin',
-               onTap: () {},
-             ),
-             
-             _buildMenuItem(
-               icon: Icons.notifications_outlined,
-               title: 'Bildirimler',
-               subtitle: 'Bildirimlerinizi yönetin',
-               onTap: () {},
-             ),
-             
-             _buildMenuItem(
-               icon: Icons.security_outlined,
-               title: 'Gizlilik & Güvenlik',
-               subtitle: 'Gizlilik ayarlarınızı yönetin',
-               onTap: () {},
-             ),
-             
-             _buildMenuItem(
-               icon: Icons.help_outline,
-               title: 'Yardım & Destek',
-               subtitle: 'Yardım alın ve destek ile iletişime geçin',
-               onTap: () {},
-             ),
-             
-             _buildMenuItem(
-               icon: Icons.info_outline,
-               title: 'Hakkında',
-               subtitle: 'Uygulama versiyonu ve bilgileri',
-               onTap: () {},
-             ),
-            
-            const SizedBox(height: 24),
-            
-            // Logout Button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Logout functionality
-                  _showLogoutDialog(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              
+              const SizedBox(height: 32),
+              
+              // Menu Items
+              Expanded(
+                child: Column(
+                  children: [
+                    _buildMenuItem(
+                      icon: Icons.shopping_bag,
+                      title: 'Siparişler',
+                      onTap: () {},
+                    ),
+                    _buildMenuItem(
+                      icon: Icons.person_outline,
+                      title: 'Bilgilerim',
+                      onTap: () {},
+                    ),
+                    _buildMenuItem(
+                      icon: Icons.location_on_outlined,
+                      title: 'Teslimat Adresi',
+                      onTap: () {},
+                    ),
+                    _buildMenuItem(
+                      icon: Icons.credit_card_outlined,
+                      title: 'Ödeme Yöntemleri',
+                      onTap: () {},
+                    ),
+                    _buildMenuItem(
+                      icon: Icons.local_offer_outlined,
+                      title: 'Promosyon Kodu',
+                      onTap: () {},
+                    ),
+                    _buildMenuItem(
+                      icon: Icons.notifications_outlined,
+                      title: 'Bildirimler',
+                      onTap: () {},
+                    ),
+                    _buildMenuItem(
+                      icon: Icons.help_outline,
+                      title: 'Yardım',
+                      onTap: () {},
+                    ),
+                    _buildMenuItem(
+                      icon: Icons.info_outline,
+                      title: 'Hakkında',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+              
+              // Logout Button
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    _showLogoutDialog(context);
+                  },
+                  icon: const Icon(
+                    Icons.logout,
+                    color: Color(0xFF53B175),
+                    size: 20,
+                  ),
+                  label: const Text(
+                    'Çıkış Yap',
+                    style: TextStyle(
+                      color: Color(0xFF53B175),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF53B175).withOpacity(0.1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 0,
                   ),
                 ),
-                                 child: const Text(
-                   'Çıkış Yap',
-                   style: TextStyle(
-                     color: Colors.white,
-                     fontSize: 16,
-                     fontWeight: FontWeight.w600,
-                   ),
-                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    );
-  }
-
-  Widget _buildStatItem(String label, String value) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF53B175),
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 14,
-            color: Colors.grey,
-          ),
-        ),
-      ],
     );
   }
 
   Widget _buildMenuItem({
     required IconData icon,
     required String title,
-    required String subtitle,
     required VoidCallback onTap,
   }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF8F9FA),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
+    return Column(
+      children: [
+        ListTile(
+          leading: Icon(
             icon,
-            color: const Color(0xFF53B175),
+            color: Colors.grey[600],
             size: 24,
           ),
-        ),
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
+          title: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black87,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-        subtitle: Text(
-          subtitle,
-          style: const TextStyle(
-            fontSize: 14,
+          trailing: const Icon(
+            Icons.chevron_right,
             color: Colors.grey,
+            size: 20,
           ),
+          onTap: onTap,
+          contentPadding: EdgeInsets.zero,
         ),
-        trailing: const Icon(
-          Icons.arrow_forward_ios,
-          color: Colors.grey,
-          size: 16,
+        Divider(
+          color: Colors.grey[200],
+          height: 1,
         ),
-        onTap: onTap,
-      ),
+      ],
     );
   }
 
   void _showLogoutDialog(BuildContext context) {
-         showDialog(
-       context: context,
-       builder: (context) => AlertDialog(
-         title: const Text('Çıkış Yap'),
-         content: const Text('Çıkış yapmak istediğinizden emin misiniz?'),
-         actions: [
-           TextButton(
-             onPressed: () {
-               Navigator.of(context).pop();
-             },
-             child: const Text('İptal'),
-           ),
-           TextButton(
-             onPressed: () {
-               Navigator.of(context).pop();
-               // Perform logout
-               ScaffoldMessenger.of(context).showSnackBar(
-                 const SnackBar(
-                   content: Text('Başarıyla çıkış yapıldı'),
-                 ),
-               );
-             },
-             child: const Text(
-               'Çıkış Yap',
-               style: TextStyle(color: Colors.red),
-             ),
-           ),
-         ],
-       ),
-     );
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text(
+          'Çıkış Yap',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: const Text(
+          'Hesabınızdan çıkış yapmak istediğinizden emin misiniz?',
+          style: TextStyle(fontSize: 16),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text(
+              'İptal',
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+              // Çıkış işlemleri burada yapılacak
+              Get.snackbar(
+                'Başarılı',
+                'Başarıyla çıkış yapıldı',
+                backgroundColor: const Color(0xFF53B175),
+                colorText: Colors.white,
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF53B175),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text(
+              'Çıkış Yap',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 } 
