@@ -37,53 +37,61 @@ class FavouriteScreen extends GetView<ProductController> {
               ],
             ),
           ),
-          
+
           // Favourite Products
           Expanded(
-            child: Obx(() => controller.favouriteProducts.isEmpty
-                ? const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.favorite_border,
-                          size: 64,
-                          color: Colors.grey,
+            child: GetBuilder<ProductController>(
+              builder: (controller) {
+                print('Favoriler sayfası güncellendi: ${controller.favouriteProductIds.length} ürün'); // Debug için
+                print('Favori ürünler listesi: ${controller.favouriteProducts.length} ürün');
+                print('Favori ürün isimleri: ${controller.favouriteProducts.map((p) => p.name).toList()}');
+                return controller.favouriteProducts.isEmpty
+                    ? const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.favorite_border,
+                              size: 64,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(height: 16),
+                            Text(
+                              'Henüz favori ürününüz yok',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Ürünlere kalp ikonuna tıklayarak\nfavorilerinize ekleyebilirsiniz',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 16),
-                        Text(
-                          'Henüz favori ürününüz yok',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
+                      )
+                    : GridView.builder(
+                        padding: const EdgeInsets.all(16),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.75,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
                         ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Beğendiğiniz ürünleri favorilere ekleyin',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : GridView.builder(
-                    padding: const EdgeInsets.all(16),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.75,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                    ),
-                    itemCount: controller.favouriteProducts.length,
-                    itemBuilder: (context, index) {
-                      return ProductCard(
-                        product: controller.favouriteProducts[index],
+                        itemCount: controller.favouriteProducts.length,
+                        itemBuilder: (context, index) {
+                          return ProductCard(
+                            product: controller.favouriteProducts[index],
+                          );
+                        },
                       );
-                    },
-                  )),
+              },
+            ),
           ),
         ],
       ),

@@ -129,17 +129,26 @@ class CartScreen extends GetView<CartController> {
         children: [
           // Product Image
           Container(
-            width: 80,
-            height: 80,
+            width: 70,
+            height: 70,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: const Color(0xFFF8F9FA),
             ),
-            child: Center(
-              child: Icon(
-                _getProductIcon(cartItem.product.name),
-                size: 40,
-                color: const Color(0xFF53B175),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                cartItem.product.imageUrl,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return Center(
+                    child: Icon(
+                      _getProductIcon(cartItem.product.name),
+                      size: 35,
+                      color: const Color(0xFF53B175),
+                    ),
+                  );
+                },
               ),
             ),
           ),
