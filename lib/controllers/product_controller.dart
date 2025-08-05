@@ -62,6 +62,15 @@ class ProductController extends GetxController {
     return SampleData.getProductsByCategory(category);
   }
 
+  List<Product> getProductsByCategoryId(int categoryId) {
+    if (categoryId == 0) {
+      // Taze Meyve & Sebze kategorisi için hem meyve (1) hem sebze (2) ürünlerini getir
+      return SampleData.products.where((product) => 
+        product.categoryId == 1 || product.categoryId == 2).toList();
+    }
+    return SampleData.getProductsByCategoryId(categoryId);
+  }
+
   List<Product> getFeaturedProducts() {
     return SampleData.getFeaturedProducts();
   }

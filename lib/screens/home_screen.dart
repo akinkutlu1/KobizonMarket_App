@@ -302,6 +302,7 @@ class HomeScreen extends GetView<ProductController> {
               price: double.tryParse(price.replaceAll('\$', '')) ?? 0.0,
               imageUrl: imagePath,
               category: 'Exclusive',
+              categoryId: 1, // Geçici ürün için varsayılan kategori ID
               unit: subtitle?.split(', ').last ?? 'piece',
             );
           },
@@ -420,6 +421,7 @@ class HomeScreen extends GetView<ProductController> {
                                 price: double.tryParse(price.replaceAll('\$', '')) ?? 0.0,
                                 imageUrl: imagePath,
                                 category: 'Exclusive',
+                                categoryId: 1, // Geçici ürün için varsayılan kategori ID
                                 unit: subtitle?.split(', ').last ?? 'piece',
                               ),
                             );

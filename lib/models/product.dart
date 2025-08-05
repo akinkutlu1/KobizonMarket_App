@@ -5,6 +5,7 @@ class Product {
   final double price;
   final String imageUrl;
   final String category;
+  final int categoryId; // Kategori ID'si eklendi
   final double rating;
   final int reviewCount;
   final bool isFavorite;
@@ -17,6 +18,7 @@ class Product {
     required this.price,
     required this.imageUrl,
     required this.category,
+    required this.categoryId,
     this.rating = 0.0,
     this.reviewCount = 0,
     this.isFavorite = false,
@@ -30,6 +32,7 @@ class Product {
     double? price,
     String? imageUrl,
     String? category,
+    int? categoryId,
     double? rating,
     int? reviewCount,
     bool? isFavorite,
@@ -42,6 +45,7 @@ class Product {
       price: price ?? this.price,
       imageUrl: imageUrl ?? this.imageUrl,
       category: category ?? this.category,
+      categoryId: categoryId ?? this.categoryId,
       rating: rating ?? this.rating,
       reviewCount: reviewCount ?? this.reviewCount,
       isFavorite: isFavorite ?? this.isFavorite,
