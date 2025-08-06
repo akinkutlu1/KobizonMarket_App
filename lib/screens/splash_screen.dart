@@ -7,6 +7,7 @@ import 'categories_screen.dart';
 import 'cart_screen.dart';
 import 'profile_screen.dart';
 import 'favourite_screen.dart';
+import 'welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,9 +20,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // 3 saniye sonra ana sayfaya geç
+    // 3 saniye sonra welcome sayfasına geç
     Timer(const Duration(seconds: 3), () {
-      Get.offAll(() => const MainScreen());
+      Get.offAll(() => const WelcomeScreen());
     });
   }
 
