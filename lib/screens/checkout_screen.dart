@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/cart_controller.dart';
+import 'order_success_screen.dart';
+import 'order_failed_screen.dart';
+import 'payment_method_screen.dart';
 
-class CheckoutScreen extends StatelessWidget {
+class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
+
+  @override
+  State<CheckoutScreen> createState() => _CheckoutScreenState();
+}
+
+class _CheckoutScreenState extends State<CheckoutScreen> {
+  String selectedPaymentMethod = 'MC';
 
   @override
   Widget build(BuildContext context) {
@@ -62,32 +72,42 @@ class CheckoutScreen extends StatelessWidget {
                 
                 const SizedBox(height: 16),
                 
-                // Payment
-                _buildCheckoutRow(
-                  title: 'Ödeme',
-                  subtitle: '',
-                  onTap: () {
-                    // TODO: Implement payment method selection
-                  },
-                  trailing: Container(
-                    width: 40,
-                    height: 25,
-                    decoration: BoxDecoration(
-                      color: Colors.orange,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'MC',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                                 // Payment
+                 _buildCheckoutRow(
+                   title: 'Ödeme',
+                   subtitle: '',
+                   onTap: () {
+                     Get.bottomSheet(
+                       PaymentMethodScreen(
+                         onPaymentMethodSelected: (method) {
+                           setState(() {
+                             selectedPaymentMethod = method == 'Kredi Kartı' ? 'MC' : 'Diğer';
+                           });
+                         },
+                       ),
+                       isScrollControlled: true,
+                       backgroundColor: Colors.transparent,
+                     );
+                   },
+                   trailing: Container(
+                     width: 40,
+                     height: 25,
+                     decoration: BoxDecoration(
+                       color: selectedPaymentMethod == 'MC' ? Colors.orange : Colors.green,
+                       borderRadius: BorderRadius.circular(4),
+                     ),
+                     child: Center(
+                       child: Text(
+                         selectedPaymentMethod,
+                         style: const TextStyle(
+                           color: Colors.white,
+                           fontSize: 12,
+                           fontWeight: FontWeight.bold,
+                         ),
+                       ),
+                     ),
+                   ),
+                 ),
                 
                 const SizedBox(height: 16),
                 
@@ -144,17 +164,18 @@ class CheckoutScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // TODO: Implement place order
-                      Get.snackbar(
-                        'Başarılı!',
-                        'Siparişiniz alındı',
-                        backgroundColor: const Color(0xFF53B175),
-                        colorText: Colors.white,
-                        duration: const Duration(seconds: 1),
-                      );
-                      Get.back();
-                    },
+                                         onPressed: () {
+                       // Check payment method and show appropriate screen
+                       if (selectedPaymentMethod == 'MC') {
+                         // Close checkout modal and open success screen
+                         Get.back();
+                         Get.to(() => const OrderSuccessScreen());
+                       } else {
+                         // Close checkout modal and open failed screen
+                         Get.back();
+                         Get.to(() => const OrderFailedScreen());
+                       }
+                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF53B175),
                       shape: RoundedRectangleBorder(
