@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'splash_screen.dart';
+import 'signin_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -92,8 +93,8 @@ class WelcomeScreen extends StatelessWidget {
                     height: 56,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Navigate to main screen
-                        Get.offAll(() => const MainScreen());
+                        // Navigate to sign in screen
+                        Get.offAll(() => const SignInScreen());
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF53B175),
