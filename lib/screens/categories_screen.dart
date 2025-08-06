@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/product_controller.dart';
 import '../widgets/product_card.dart';
 import 'category_products_screen.dart';
+import 'search_screen.dart';
 
 class CategoriesScreen extends GetView<ProductController> {
   const CategoriesScreen({super.key});
@@ -44,11 +45,21 @@ class CategoriesScreen extends GetView<ProductController> {
                       size: 24,
                     ),
                     const SizedBox(width: 12),
-                    const Text(
-                      'Mağaza Ara',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
+                    Expanded(
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          hintText: 'Mağaza Ara',
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        onSubmitted: (value) {
+                          if (value.trim().isNotEmpty) {
+                            Get.to(() => SearchScreen(searchQuery: value.trim()));
+                          }
+                        },
                       ),
                     ),
                   ],
@@ -179,4 +190,6 @@ class CategoriesScreen extends GetView<ProductController> {
       ),
     );
   }
+
+
 } 

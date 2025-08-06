@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/cart_controller.dart';
 import '../controllers/navigation_controller.dart';
 import '../models/cart_item.dart';
+import 'checkout_screen.dart';
 
 class CartScreen extends GetView<CartController> {
   const CartScreen({super.key});
@@ -274,7 +275,11 @@ class CartScreen extends GetView<CartController> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  _showCheckoutDialog();
+                  Get.bottomSheet(
+                    const CheckoutScreen(),
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF53B175),
@@ -299,25 +304,7 @@ class CartScreen extends GetView<CartController> {
     );
   }
 
-  void _showCheckoutDialog() {
-    Get.dialog(
-      AlertDialog(
-        title: const Text('Sipariş Onaylandı!'),
-        content: Obx(() => Text(
-          '₺${controller.totalAmount.toStringAsFixed(2)} tutarındaki siparişiniz başarıyla verildi.',
-        )),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-              controller.clear();
-            },
-            child: const Text('Tamam'),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   IconData _getProductIcon(String productName) {
     final name = productName.toLowerCase();

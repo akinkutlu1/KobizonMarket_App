@@ -71,6 +71,42 @@ class ProductController extends GetxController {
     return SampleData.getProductsByCategoryId(categoryId);
   }
 
+  List<Product> searchProducts(String query) {
+    if (query.isEmpty) return [];
+    
+    return SampleData.products.where((product) =>
+      product.name.toLowerCase().contains(query.toLowerCase()) ||
+      product.description.toLowerCase().contains(query.toLowerCase()) ||
+      product.category.toLowerCase().contains(query.toLowerCase())
+    ).toList();
+  }
+
+  List<Product> searchProductsWithFilters(String query, List<String> categories, List<String> brands) {
+    if (query.isEmpty) return [];
+    
+    List<Product> filteredProducts = SampleData.products.where((product) =>
+      product.name.toLowerCase().contains(query.toLowerCase()) ||
+      product.description.toLowerCase().contains(query.toLowerCase()) ||
+      product.category.toLowerCase().contains(query.toLowerCase())
+    ).toList();
+
+    // Kategori filtresi
+    if (categories.isNotEmpty) {
+      filteredProducts = filteredProducts.where((product) {
+        return categories.any((category) => 
+          product.category.toLowerCase().contains(category.toLowerCase()));
+      }).toList();
+    }
+
+    // Marka filtresi (şimdilik basit bir kontrol)
+    if (brands.isNotEmpty) {
+      // Marka bilgisi olmadığı için şimdilik tüm ürünleri geçiriyoruz
+      // Gelecekte Product modeline brand field'ı eklenebilir
+    }
+
+    return filteredProducts;
+  }
+
   List<Product> getFeaturedProducts() {
     return SampleData.getFeaturedProducts();
   }

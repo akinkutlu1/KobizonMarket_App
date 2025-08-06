@@ -8,6 +8,7 @@ import '../widgets/category_card.dart';
 import '../models/product.dart';
 import 'location_screen.dart';
 import 'product_detail_screen.dart';
+import 'search_screen.dart';
 
 class HomeScreen extends GetView<ProductController> {
   const HomeScreen({super.key});
@@ -88,11 +89,21 @@ class HomeScreen extends GetView<ProductController> {
                         size: 24,
                       ),
                       const SizedBox(width: 12),
-                      const Text(
-                        'Search Store',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
+                      Expanded(
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            hintText: 'Search Store',
+                            border: InputBorder.none,
+                            hintStyle: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          onSubmitted: (value) {
+                            if (value.trim().isNotEmpty) {
+                              Get.to(() => SearchScreen(searchQuery: value.trim()));
+                            }
+                          },
                         ),
                       ),
                     ],
@@ -460,4 +471,6 @@ class HomeScreen extends GetView<ProductController> {
       ),
     );
   }
+
+
 } 
