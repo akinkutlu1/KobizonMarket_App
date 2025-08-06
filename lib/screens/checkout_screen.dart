@@ -17,165 +17,162 @@ class CheckoutScreen extends StatelessWidget {
           topRight: Radius.circular(20),
         ),
       ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Header
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
               children: [
-                // Header
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      const Text(
-                        'Ödeme',
+                const Text(
+                  'Ödeme',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () => Get.back(),
+                  child: const Icon(
+                    Icons.close,
+                    size: 28,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          // Checkout Options
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                // Delivery
+                _buildCheckoutRow(
+                  title: 'Teslimat',
+                  subtitle: 'Yöntem Seç',
+                  onTap: () {
+                    // TODO: Implement delivery method selection
+                  },
+                ),
+                
+                const SizedBox(height: 16),
+                
+                // Payment
+                _buildCheckoutRow(
+                  title: 'Ödeme',
+                  subtitle: '',
+                  onTap: () {
+                    // TODO: Implement payment method selection
+                  },
+                  trailing: Container(
+                    width: 40,
+                    height: 25,
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'MC',
                         style: TextStyle(
-                          fontSize: 24,
+                          color: Colors.white,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
                         ),
                       ),
-                      const Spacer(),
-                      GestureDetector(
-                        onTap: () => Get.back(),
-                        child: const Icon(
-                          Icons.close,
-                          size: 28,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
                 
-                // Checkout Options
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      // Delivery
-                      _buildCheckoutRow(
-                        title: 'Teslimat',
-                        subtitle: 'Yöntem Seç',
-                        onTap: () {
-                          // TODO: Implement delivery method selection
-                        },
-                      ),
-                      
-                      const SizedBox(height: 16),
-                      
-                      // Payment
-                      _buildCheckoutRow(
-                        title: 'Ödeme',
-                        subtitle: '',
-                        onTap: () {
-                          // TODO: Implement payment method selection
-                        },
-                        trailing: Container(
-                          width: 40,
-                          height: 25,
-                          decoration: BoxDecoration(
-                            color: Colors.orange,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              'MC',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      
-                      const SizedBox(height: 16),
-                      
-                      // Promo Code
-                      _buildCheckoutRow(
-                        title: 'Promosyon Kodu',
-                        subtitle: 'İndirim Seç',
-                        onTap: () {
-                          // TODO: Implement promo code selection
-                        },
-                      ),
-                      
-                      const SizedBox(height: 16),
-                      
-                      // Total Cost
-                      _buildCheckoutRow(
-                        title: 'Toplam Tutar',
-                        subtitle: '₺${cartController.totalAmount.toStringAsFixed(2)}',
-                        onTap: () {
-                          // TODO: Show detailed breakdown
-                        },
-                      ),
-                      
-                      const SizedBox(height: 16),
-                      
-                      // Terms and Conditions
-                      const Text(
-                        'Sipariş vererek şunları kabul etmiş olursunuz',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      GestureDetector(
-                        onTap: () {
-                          // TODO: Show terms and conditions
-                        },
-                        child: const Text(
-                          'Şartlar Ve Koşullar',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Color(0xFF53B175),
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                      
-                      const SizedBox(height: 24),
-                      
-                      // Place Order Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 56,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // TODO: Implement place order
-                            Get.snackbar(
-                              'Başarılı!',
-                              'Siparişiniz alındı',
-                              backgroundColor: const Color(0xFF53B175),
-                              colorText: Colors.white,
-                              duration: const Duration(seconds: 1),
-                            );
-                            Get.back();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF53B175),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          child: const Text(
-                            'Sipariş Ver',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      
-                      const SizedBox(height: 20),
-                    ],
+                const SizedBox(height: 16),
+                
+                // Promo Code
+                _buildCheckoutRow(
+                  title: 'Promosyon Kodu',
+                  subtitle: 'İndirim Seç',
+                  onTap: () {
+                    // TODO: Implement promo code selection
+                  },
+                ),
+                
+                const SizedBox(height: 16),
+                
+                // Total Cost
+                _buildCheckoutRow(
+                  title: 'Toplam Tutar',
+                  subtitle: '₺${cartController.totalAmount.toStringAsFixed(2)}',
+                  onTap: () {
+                    // TODO: Show detailed breakdown
+                  },
+                ),
+                
+                const SizedBox(height: 16),
+                
+                // Terms and Conditions
+                const Text(
+                  'Sipariş vererek şunları kabul etmiş olursunuz',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
                   ),
                 ),
+                const SizedBox(height: 4),
+                GestureDetector(
+                  onTap: () {
+                    // TODO: Show terms and conditions
+                  },
+                  child: const Text(
+                    'Şartlar Ve Koşullar',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF53B175),
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+                
+                const SizedBox(height: 24),
+                
+                // Place Order Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // TODO: Implement place order
+                      Get.snackbar(
+                        'Başarılı!',
+                        'Siparişiniz alındı',
+                        backgroundColor: const Color(0xFF53B175),
+                        colorText: Colors.white,
+                        duration: const Duration(seconds: 1),
+                      );
+                      Get.back();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF53B175),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: const Text(
+                      'Sipariş Ver',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                
+                const SizedBox(height: 20),
               ],
             ),
           ),
