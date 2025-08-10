@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'splash_screen.dart';
 import 'phone_input_screen.dart';
+import 'login_screen.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -220,9 +221,40 @@ class SignInScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                                     ),
-                   
-                   const SizedBox(height: 20),
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Hesabım var Button
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Hesabım var, ',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(() => const LoginScreen());
+                          },
+                          child: const Text(
+                            'giriş yap',
+                            style: TextStyle(
+                              color: Color(0xFF53B175),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 20),
                  ],
                ),
              ),

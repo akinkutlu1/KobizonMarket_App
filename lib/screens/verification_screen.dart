@@ -75,8 +75,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
     }
     _focusNodes[0].requestFocus();
     Get.snackbar(
-      'Kod Yeniden Gönderildi',
-      'Yeni doğrulama kodu telefonunuza gönderildi',
+      'SMS Kodu Yeniden Gönderildi',
+      'Yeni doğrulama kodu telefonunuza SMS olarak gönderildi',
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: const Color(0xFF53B175),
       colorText: Colors.white,
@@ -142,16 +142,25 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    '4 haneli kodunuzu girin',
+                    'Telefon doğrulama',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Telefonunuza gönderilen 4 haneli doğrulama kodunu girin',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                      height: 1.4,
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   const Text(
-                    'Kod',
+                    'Doğrulama Kodu',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
@@ -199,14 +208,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   // Resend Code Link
                   GestureDetector(
                     onTap: _onResendCode,
-                    child: const Text(
-                      'Kodu Yeniden Gönder',
-                      style: TextStyle(
-                        color: Color(0xFF53B175),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    child:                          const Text(
+                           'SMS kodunu yeniden gönder',
+                           style: TextStyle(
+                             color: Color(0xFF53B175),
+                             fontSize: 14,
+                             fontWeight: FontWeight.w500,
+                           ),
+                         ),
                   ),
                 ],
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'verification_screen.dart';
+import 'signup_screen.dart';
 
 class PhoneInputScreen extends StatefulWidget {
   const PhoneInputScreen({super.key});
@@ -34,7 +35,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
 
   void _onContinuePressed() {
     if (_phoneController.text.length >= 10) {
-      Get.to(() => const VerificationScreen());
+      Get.to(() => const SignupScreen());
     }
   }
 
