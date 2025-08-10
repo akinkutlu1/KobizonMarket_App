@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/navigation_controller.dart';
+import 'home_screen.dart';
+import 'categories_screen.dart';
+import 'favourite_screen.dart';
+import 'cart_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -168,6 +173,57 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: Obx(() {
+        final navigationController = Get.find<NavigationController>();
+        return BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: navigationController.currentIndex,
+          onTap: (index) {
+            navigationController.changePage(index);
+            switch (index) {
+              case 0:
+                Get.offAll(() => const HomeScreen());
+                break;
+              case 1:
+                Get.offAll(() => const CategoriesScreen());
+                break;
+              case 2:
+                Get.offAll(() => const FavouriteScreen());
+                break;
+              case 3:
+                Get.offAll(() => const CartScreen());
+                break;
+              case 4:
+                // Profile - already here
+                break;
+            }
+          },
+          selectedItemColor: const Color(0xFF53B175),
+          unselectedItemColor: Colors.grey,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Ana Sayfa',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.explore),
+              label: 'Keşfet',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: 'Favoriler',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart),
+              label: 'Sepet',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Hesap',
+            ),
+          ],
+        );
+      }),
     );
   }
 

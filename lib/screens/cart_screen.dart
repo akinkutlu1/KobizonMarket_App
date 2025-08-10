@@ -4,6 +4,10 @@ import '../controllers/cart_controller.dart';
 import '../controllers/navigation_controller.dart';
 import '../models/cart_item.dart';
 import 'checkout_screen.dart';
+import 'home_screen.dart';
+import 'categories_screen.dart';
+import 'favourite_screen.dart';
+import 'profile_screen.dart';
 
 class CartScreen extends GetView<CartController> {
   const CartScreen({super.key});
@@ -26,9 +30,69 @@ class CartScreen extends GetView<CartController> {
       body: Obx(() => controller.items.isEmpty
           ? _buildEmptyCart()
           : _buildCartContent()),
-      bottomNavigationBar: Obx(() => controller.items.isEmpty
-          ? const SizedBox.shrink()
-          : _buildCheckoutSection()),
+      bottomNavigationBar: Obx(() {
+        if (controller.items.isEmpty) {
+          // Empty cart - show only navigation bar
+          final navigationController = Get.find<NavigationController>();
+          return BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            currentIndex: navigationController.currentIndex,
+            onTap: (index) {
+              navigationController.changePage(index);
+              switch (index) {
+                case 0:
+                  Get.offAll(() => const HomeScreen());
+                  break;
+                case 1:
+                  Get.offAll(() => const CategoriesScreen());
+                  break;
+                case 2:
+                  Get.offAll(() => const FavouriteScreen());
+                  break;
+                case 3:
+                  // Cart - already here
+                  break;
+                case 4:
+                  Get.offAll(() => const ProfileScreen());
+                  break;
+              }
+            },
+            selectedItemColor: const Color(0xFF53B175),
+            unselectedItemColor: Colors.grey,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Ana Sayfa',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.explore),
+                label: 'Keşfet',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.favorite),
+                label: 'Favoriler',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_cart),
+                label: 'Sepet',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Hesap',
+              ),
+            ],
+          );
+        } else {
+          // Cart has items - show checkout section with navigation
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildCheckoutSection(),
+              _buildNavigationBar(),
+            ],
+          );
+        }
+      }),
     );
   }
 
@@ -317,5 +381,57 @@ class CartScreen extends GetView<CartController> {
     if (name.contains('chicken')) return Icons.restaurant;
     if (name.contains('rice')) return Icons.grain;
     return Icons.shopping_bag;
+  }
+
+  Widget _buildNavigationBar() {
+    final navigationController = Get.find<NavigationController>();
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      currentIndex: navigationController.currentIndex,
+      onTap: (index) {
+        navigationController.changePage(index);
+        switch (index) {
+          case 0:
+            Get.offAll(() => const HomeScreen());
+            break;
+          case 1:
+            Get.offAll(() => const CategoriesScreen());
+            break;
+          case 2:
+            Get.offAll(() => const FavouriteScreen());
+            break;
+          case 3:
+            // Cart - already here
+            break;
+          case 4:
+            Get.offAll(() => const ProfileScreen());
+            break;
+        }
+      },
+      selectedItemColor: const Color(0xFF53B175),
+      unselectedItemColor: Colors.grey,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Ana Sayfa',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.explore),
+          label: 'Keşfet',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.favorite),
+          label: 'Favoriler',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.shopping_cart),
+          label: 'Sepet',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Hesap',
+        ),
+      ],
+    );
   }
 } 

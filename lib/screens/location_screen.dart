@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/location_controller.dart';
+import 'home_screen.dart';
 
 class LocationScreen extends StatefulWidget {
   const LocationScreen({super.key});
@@ -129,7 +130,7 @@ class _LocationScreenState extends State<LocationScreen> {
                     }).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
-                        selectedZone = newValue!;
+                        selectedZone = newValue ?? selectedZone;
                       });
                     },
                   ),
@@ -205,7 +206,7 @@ class _LocationScreenState extends State<LocationScreen> {
                         ? '$selectedZone, $selectedArea'
                         : selectedZone;
                     locationController.updateLocation(newLocation);
-                    Get.back();
+                    Get.offAll(() => const HomeScreen());
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF53B175),

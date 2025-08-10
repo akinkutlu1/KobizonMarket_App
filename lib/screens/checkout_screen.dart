@@ -169,11 +169,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                        if (selectedPaymentMethod == 'MC') {
                          // Close checkout modal and open success screen
                          Get.back();
-                         Get.to(() => const OrderSuccessScreen());
+                         Get.offAll(() => const OrderSuccessScreen());
                        } else {
                          // Close checkout modal and open failed screen
                          Get.back();
-                         Get.to(() => const OrderFailedScreen());
+                         Get.offAll(() => const OrderFailedScreen());
                        }
                      },
                     style: ElevatedButton.styleFrom(

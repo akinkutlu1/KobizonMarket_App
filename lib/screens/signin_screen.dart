@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'splash_screen.dart';
+import 'phone_input_screen.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -47,48 +48,52 @@ class SignInScreen extends StatelessWidget {
                 
                   const SizedBox(height: 32),
                   
-                  // Phone Number Input - Horizontal line style
-                  Row(
-                    children: [
-                      // Country Flag and Code
-                      Container(
-                        width: 32,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            '🇹🇷',
-                            style: TextStyle(fontSize: 16),
+                  // Phone Number Input - Clickable to navigate
+                  GestureDetector(
+                    onTap: () => Get.to(() => const PhoneInputScreen()),
+                    child: Row(
+                      children: [
+                        // Country Flag and Code
+                        Container(
+                          width: 32,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              '🇹🇷',
+                              style: TextStyle(fontSize: 16),
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        '+90',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
+                        const SizedBox(width: 8),
+                        const Text(
+                          '+90',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black87,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      const Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Telefon numaranızı girin',
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Text(
+                            'Telefon numaranızı girin',
+                            style: TextStyle(
                               color: Colors.grey,
                               fontSize: 16,
                             ),
                           ),
-                          keyboardType: TextInputType.phone,
                         ),
-                      ),
-                    ],
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.grey,
+                          size: 16,
+                        ),
+                      ],
+                    ),
                   ),
                   
                   // Horizontal line under phone input

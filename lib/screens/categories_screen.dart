@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/product_controller.dart';
+import '../controllers/navigation_controller.dart';
 import '../widgets/product_card.dart';
 import 'category_products_screen.dart';
 import 'search_screen.dart';
+import 'home_screen.dart';
+import 'favourite_screen.dart';
+import 'cart_screen.dart';
+import 'profile_screen.dart';
 
 class CategoriesScreen extends GetView<ProductController> {
   const CategoriesScreen({super.key});
@@ -119,6 +124,57 @@ class CategoriesScreen extends GetView<ProductController> {
           ),
         ),
       ),
+      bottomNavigationBar: Obx(() {
+        final navigationController = Get.find<NavigationController>();
+        return BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: navigationController.currentIndex,
+          onTap: (index) {
+            navigationController.changePage(index);
+            switch (index) {
+              case 0:
+                Get.offAll(() => const HomeScreen());
+                break;
+              case 1:
+                // Categories - already here
+                break;
+              case 2:
+                Get.offAll(() => const FavouriteScreen());
+                break;
+              case 3:
+                Get.offAll(() => const CartScreen());
+                break;
+              case 4:
+                Get.offAll(() => const ProfileScreen());
+                break;
+            }
+          },
+          selectedItemColor: const Color(0xFF53B175),
+          unselectedItemColor: Colors.grey,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Ana Sayfa',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.explore),
+              label: 'Keşfet',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: 'Favoriler',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart),
+              label: 'Sepet',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Hesap',
+            ),
+          ],
+        );
+      }),
     );
   }
 
