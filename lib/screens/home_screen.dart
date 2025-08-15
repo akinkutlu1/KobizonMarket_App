@@ -14,6 +14,8 @@ import 'categories_screen.dart';
 import 'favourite_screen.dart';
 import 'cart_screen.dart';
 import 'profile_screen.dart';
+import 'most_viewed_screen.dart';
+import 'featured_products_screen.dart';
 
 class HomeScreen extends GetView<ProductController> {
   const HomeScreen({super.key});
@@ -174,12 +176,12 @@ class HomeScreen extends GetView<ProductController> {
 
                 const SizedBox(height: 24),
 
-                // En Çok Tıklanan Ürünler
+                // En Çok Görüntülenenler
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'En Çok Tıklananlar',
+                      'En Çok Görüntülenenler',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -188,7 +190,7 @@ class HomeScreen extends GetView<ProductController> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Get.to(() => const CategoriesScreen());
+                        Get.to(() => const MostViewedScreen());
                       },
                       child: const Text(
                         'Tümünü Gör',
@@ -246,7 +248,7 @@ class HomeScreen extends GetView<ProductController> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Get.to(() => const CategoriesScreen());
+                        Get.to(() => const FeaturedProductsScreen());
                       },
                       child: const Text(
                         'Tümünü Gör',
@@ -264,9 +266,13 @@ class HomeScreen extends GetView<ProductController> {
                 // Öne Çıkan Ürünler
                 Obx(() {
                   final products = controller.products;
-                  final featuredProducts = products.where((p) => p.rating >= 4.5).take(6).toList();
+                  final featuredProducts = products.where((p) => p.rating >= 4.5).toList();
                   
-                  if (featuredProducts.isEmpty) {
+                  // Random olarak 6 ürün seç
+                  featuredProducts.shuffle();
+                  final randomFeaturedProducts = featuredProducts.take(6).toList();
+                  
+                  if (randomFeaturedProducts.isEmpty) {
                     return const SizedBox(
                       height: 170,
                       child: Center(
@@ -279,11 +285,11 @@ class HomeScreen extends GetView<ProductController> {
                     height: 170,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: featuredProducts.length,
+                      itemCount: randomFeaturedProducts.length,
                       itemBuilder: (context, index) {
-                        final product = featuredProducts[index];
+                        final product = randomFeaturedProducts[index];
                         return Padding(
-                          padding: EdgeInsets.only(right: index < featuredProducts.length - 1 ? 16 : 0),
+                          padding: EdgeInsets.only(right: index < randomFeaturedProducts.length - 1 ? 16 : 0),
                           child: _buildProductCard(product),
                         );
                       },

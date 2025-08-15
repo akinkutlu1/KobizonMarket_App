@@ -3,7 +3,11 @@ import 'package:get/get.dart';
 import '../controllers/product_controller.dart';
 import '../controllers/navigation_controller.dart';
 import '../widgets/product_card.dart';
-import 'splash_screen.dart';
+import 'home_screen.dart';
+import 'categories_screen.dart';
+import 'cart_screen.dart';
+import 'favourite_screen.dart';
+import 'profile_screen.dart';
 import 'filter_screen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -197,56 +201,57 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: GetBuilder<NavigationController>(
-        builder: (controller) => BottomNavigationBar(
-          currentIndex: controller.currentIndex,
+      bottomNavigationBar: Obx(() {
+        final navigationController = Get.find<NavigationController>();
+        return BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: navigationController.currentIndex,
           onTap: (index) {
-            controller.changePage(index);
+            navigationController.changePage(index);
             switch (index) {
               case 0:
-                Get.offAll(() => const MainScreen());
+                Get.offAll(() => const HomeScreen());
                 break;
               case 1:
-                Get.offAll(() => const MainScreen());
+                Get.offAll(() => const CategoriesScreen());
                 break;
               case 2:
-                Get.offAll(() => const MainScreen());
+                Get.offAll(() => const FavouriteScreen());
                 break;
               case 3:
-                Get.offAll(() => const MainScreen());
+                Get.offAll(() => const CartScreen());
                 break;
               case 4:
-                Get.offAll(() => const MainScreen());
+                Get.offAll(() => const ProfileScreen());
                 break;
             }
           },
-          type: BottomNavigationBarType.fixed,
           selectedItemColor: const Color(0xFF53B175),
           unselectedItemColor: Colors.grey,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.store),
-              label: 'Market',
+              icon: Icon(Icons.home),
+              label: 'Ana Sayfa',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.explore),
               label: 'Keşfet',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart),
-              label: 'Sepet',
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.favorite),
               label: 'Favoriler',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart),
+              label: 'Sepet',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: 'Hesap',
             ),
           ],
-        ),
-      ),
+        );
+      }),
     );
   }
 } 
