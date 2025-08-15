@@ -39,41 +39,69 @@ class HomeScreen extends GetView<ProductController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header with Logo and Location
-                Column(
+                // Header with Logo, Location and Chatbot
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Logo
-                    Center(
-                      child: Image.asset(
-                        'assets/images/havuc.png',
-                        width: 40,
-                        height: 40,
-                      ),
+                    // Left side - Logo and Location
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Logo
+                        Row(
+                          children: [
+                            const SizedBox(width: 23),
+                            Image.asset(
+                              'assets/images/havuc.png',
+                              width: 40,
+                              height: 40,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 2),
+                        // Location
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(() => const LocationScreen());
+                          },
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on,
+                                color: Colors.black87,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Obx(() => Text(
+                                Get.find<LocationController>().currentLocation.value,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                ),
+                              )),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 2),
-                    // Location
+                    // Right side - Chatbot
                     GestureDetector(
                       onTap: () {
-                        Get.to(() => const LocationScreen());
+                        // TODO: Chatbot sayfası eklenecek
+                        Get.snackbar(
+                          'Bilgi',
+                          'Chatbot yakında eklenecek!',
+                          snackPosition: SnackPosition.TOP,
+                          backgroundColor: const Color(0xFF53B175),
+                          colorText: Colors.white,
+                          duration: const Duration(seconds: 2),
+                        );
                       },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.location_on,
-                            color: Colors.black87,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          Obx(() => Text(
-                            Get.find<LocationController>().currentLocation.value,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                            ),
-                          )),
-                        ],
+                      child: Image.asset(
+                        'assets/images/chatbot.png',
+                        width: 50,
+                        height: 50,
                       ),
                     ),
                   ],
@@ -103,7 +131,7 @@ class HomeScreen extends GetView<ProductController> {
                       Expanded(
                         child: TextField(
                           decoration: const InputDecoration(
-                            hintText: 'Search Store',
+                            hintText: 'Mağazada ara',
                             border: InputBorder.none,
                             hintStyle: TextStyle(
                               fontSize: 16,

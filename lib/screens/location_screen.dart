@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../controllers/location_controller.dart';
 import 'home_screen.dart';
 
@@ -11,24 +13,123 @@ class LocationScreen extends StatefulWidget {
 }
 
 class _LocationScreenState extends State<LocationScreen> {
-  String selectedZone = 'Banasree';
-  String selectedArea = '';
+  String selectedCity = 'İstanbul';
+  String selectedDistrict = '';
 
-  final List<String> zones = [
-    'Banasree',
-    'Gulshan',
-    'Dhanmondi',
-    'Mirpur',
-    'Uttara',
-    'Mohammadpur',
+  final List<String> cities = [
+    'İstanbul',
+    'İzmir',
+    'Ankara',
+    'Zonguldak',
   ];
 
-  final List<String> areas = [
-    'Residential Area',
-    'Commercial Area',
-    'Industrial Area',
-    'Mixed Area',
-  ];
+  final Map<String, List<String>> districts = {
+    'İstanbul': [
+      'Kadıköy',
+      'Beşiktaş',
+      'Şişli',
+      'Beyoğlu',
+      'Fatih',
+      'Üsküdar',
+      'Maltepe',
+      'Kartal',
+      'Pendik',
+      'Tuzla',
+      'Sarıyer',
+      'Bakırköy',
+      'Bahçelievler',
+      'Küçükçekmece',
+      'Büyükçekmece',
+      'Avcılar',
+      'Esenyurt',
+      'Başakşehir',
+      'Sultangazi',
+      'Gaziosmanpaşa',
+      'Kağıthane',
+      'Eyüp',
+      'Bayrampaşa',
+      'Esenler',
+      'Bağcılar',
+      'Güngören',
+      'Zeytinburnu',
+      'Sultanbeyli',
+      'Çekmeköy',
+      'Ümraniye',
+      'Ataşehir',
+      'Sancaktepe',
+    ],
+    'İzmir': [
+      'Konak',
+      'Karşıyaka',
+      'Bornova',
+      'Buca',
+      'Çiğli',
+      'Bayraklı',
+      'Gaziemir',
+      'Karabağlar',
+      'Narlıdere',
+      'Güzelbahçe',
+      'Urla',
+      'Seferihisar',
+      'Menderes',
+      'Torbalı',
+      'Kemalpaşa',
+      'Ödemiş',
+      'Tire',
+      'Bergama',
+      'Dikili',
+      'Aliağa',
+      'Foça',
+      'Çeşme',
+      'Karaburun',
+      'Kınık',
+      'Beydağ',
+      'Kiraz',
+      'Ödemiş',
+    ],
+    'Ankara': [
+      'Çankaya',
+      'Keçiören',
+      'Mamak',
+      'Yenimahalle',
+      'Etimesgut',
+      'Sincan',
+      'Altındağ',
+      'Pursaklar',
+      'Gölbaşı',
+      'Polatlı',
+      'Beypazarı',
+      'Nallıhan',
+      'Kızılcahamam',
+      'Çamlıdere',
+      'Ayaş',
+      'Güdül',
+      'Kazan',
+      'Akyurt',
+      'Kalecik',
+      'Bala',
+      'Elmadağ',
+      'Haymana',
+      'Şereflikoçhisar',
+      'Evren',
+      'Çubuk',
+    ],
+    'Zonguldak': [
+      'Merkez',
+      'Kozlu',
+      'Kilimli',
+      'Çaycuma',
+      'Devrek',
+      'Gökçebey',
+      'Alaplı',
+      'Ereğli',
+      'Perşembe',
+      'Ulus',
+      'Bartın',
+      'Amasra',
+      'Kurucaşile',
+    ],
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +192,9 @@ class _LocationScreenState extends State<LocationScreen> {
               
               const SizedBox(height: 40),
               
-              // Your Zone
+              // Your City
               const Text(
-                'Bölgeniz',
+                'Şehriniz',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
@@ -114,7 +215,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
-                    value: selectedZone,
+                    value: selectedCity,
                     isExpanded: true,
                     icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
                     style: const TextStyle(
@@ -122,15 +223,16 @@ class _LocationScreenState extends State<LocationScreen> {
                       color: Colors.black87,
                       fontWeight: FontWeight.w500,
                     ),
-                    items: zones.map((String zone) {
+                    items: cities.map((String city) {
                       return DropdownMenuItem<String>(
-                        value: zone,
-                        child: Text(zone),
+                        value: city,
+                        child: Text(city),
                       );
                     }).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
-                        selectedZone = newValue ?? selectedZone;
+                        selectedCity = newValue ?? selectedCity;
+                        selectedDistrict = ''; // Şehir değişince ilçeyi sıfırla
                       });
                     },
                   ),
@@ -139,9 +241,9 @@ class _LocationScreenState extends State<LocationScreen> {
               
               const SizedBox(height: 24),
               
-              // Your Area
+              // Your District
               const Text(
-                'Alanınız',
+                'İlçeniz',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
@@ -162,7 +264,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
-                    value: selectedArea.isEmpty ? null : selectedArea,
+                    value: selectedDistrict.isEmpty ? null : selectedDistrict,
                     isExpanded: true,
                     icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
                     style: const TextStyle(
@@ -171,21 +273,21 @@ class _LocationScreenState extends State<LocationScreen> {
                       fontWeight: FontWeight.w500,
                     ),
                     hint: const Text(
-                      'Bölgenizin türleri',
+                      'İlçenizi seçin',
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 16,
                       ),
                     ),
-                    items: areas.map((String area) {
+                    items: districts[selectedCity]?.map((String district) {
                       return DropdownMenuItem<String>(
-                        value: area,
-                        child: Text(area),
+                        value: district,
+                        child: Text(district),
                       );
-                    }).toList(),
+                    }).toList() ?? [],
                     onChanged: (String? newValue) {
                       setState(() {
-                        selectedArea = newValue ?? '';
+                        selectedDistrict = newValue ?? '';
                       });
                     },
                   ),
@@ -199,14 +301,47 @@ class _LocationScreenState extends State<LocationScreen> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     // Konum bilgilerini kaydet ve ana sayfaya dön
                     final locationController = Get.find<LocationController>();
-                    final newLocation = selectedArea.isNotEmpty 
-                        ? '$selectedZone, $selectedArea'
-                        : selectedZone;
-                    locationController.updateLocation(newLocation);
-                    Get.offAll(() => const HomeScreen());
+                    final newLocation = selectedDistrict.isNotEmpty 
+                        ? '$selectedCity, $selectedDistrict'
+                        : selectedCity;
+                    
+                    // Loading göster
+                    Get.dialog(
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      barrierDismissible: false,
+                    );
+                    
+                    try {
+                      await locationController.updateLocation(newLocation);
+                      Get.back(); // Loading dialog'u kapat
+                      
+                      // Başarı mesajı göster
+                      Get.snackbar(
+                        'Başarılı',
+                        'Konum bilgileriniz kaydedildi',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: const Color(0xFF53B175),
+                        colorText: Colors.white,
+                        duration: const Duration(seconds: 2),
+                      );
+                      
+                      // Ana sayfaya yönlendir
+                      Get.offAll(() => const HomeScreen());
+                    } catch (e) {
+                      Get.back(); // Loading dialog'u kapat
+                      Get.snackbar(
+                        'Hata',
+                        'Konum kaydedilirken bir sorun oluştu',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF53B175),
@@ -216,7 +351,7 @@ class _LocationScreenState extends State<LocationScreen> {
                     elevation: 0,
                   ),
                   child: const Text(
-                    'Gönder',
+                    'Kaydet',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
