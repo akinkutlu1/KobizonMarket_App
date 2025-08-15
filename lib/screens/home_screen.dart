@@ -16,6 +16,7 @@ import 'cart_screen.dart';
 import 'profile_screen.dart';
 import 'most_viewed_screen.dart';
 import 'featured_products_screen.dart';
+import 'chatbot_screen.dart';
 
 class HomeScreen extends GetView<ProductController> {
   const HomeScreen({super.key});
@@ -88,15 +89,7 @@ class HomeScreen extends GetView<ProductController> {
                     // Right side - Chatbot
                     GestureDetector(
                       onTap: () {
-                        // TODO: Chatbot sayfası eklenecek
-                        Get.snackbar(
-                          'Bilgi',
-                          'Chatbot yakında eklenecek!',
-                          snackPosition: SnackPosition.TOP,
-                          backgroundColor: const Color(0xFF53B175),
-                          colorText: Colors.white,
-                          duration: const Duration(seconds: 2),
-                        );
+                        Get.to(() => const ChatbotScreen());
                       },
                       child: Image.asset(
                         'assets/images/chatbot.png',
