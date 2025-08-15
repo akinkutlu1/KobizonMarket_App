@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/cart_controller.dart';
+import '../controllers/order_controller.dart';
 import 'order_success_screen.dart';
 import 'order_failed_screen.dart';
 import 'payment_method_screen.dart';
@@ -164,18 +165,38 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                                         onPressed: () {
-                       // Check payment method and show appropriate screen
-                       if (selectedPaymentMethod == 'MC') {
-                         // Close checkout modal and open success screen
-                         Get.back();
-                         Get.offAll(() => const OrderSuccessScreen());
-                       } else {
-                         // Close checkout modal and open failed screen
-                         Get.back();
-                         Get.offAll(() => const OrderFailedScreen());
-                       }
-                     },
+                                                           onPressed: () async {
+                    // Check payment method and process order
+                    if (selectedPaymentMethod == 'MC') {
+                      try {
+                        final orderController = Get.find<OrderController>();
+                        final cartController = Get.find<CartController>();
+                        
+                        // Sipariş oluştur
+                        await orderController.createOrder(
+                          items: cartController.items.values.toList(),
+                          totalAmount: cartController.totalAmount,
+                          deliveryAddress: 'Teslimat Adresi', // TODO: Gerçek adres al
+                          paymentMethod: 'Kredi Kartı',
+                        );
+                        
+                        // Sepeti temizle
+                        cartController.clear();
+                        
+                        // Başarı ekranına git
+                        Get.back();
+                        Get.offAll(() => const OrderSuccessScreen());
+                      } catch (e) {
+                        print('Sipariş oluşturulurken hata: $e');
+                        Get.back();
+                        Get.offAll(() => const OrderFailedScreen());
+                      }
+                    } else {
+                      // Başarısız ekranına git
+                      Get.back();
+                      Get.offAll(() => const OrderFailedScreen());
+                    }
+                  },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF53B175),
                       shape: RoundedRectangleBorder(

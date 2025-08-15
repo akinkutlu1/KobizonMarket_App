@@ -6,6 +6,7 @@ import 'home_screen.dart';
 import 'categories_screen.dart';
 import 'favourite_screen.dart';
 import 'cart_screen.dart';
+import 'orders_screen.dart';
 
 class ProfileScreen extends GetView<AuthService> {
   const ProfileScreen({super.key});
@@ -113,7 +114,9 @@ class ProfileScreen extends GetView<AuthService> {
                     _buildMenuItem(
                       icon: Icons.shopping_bag,
                       title: 'Siparişler',
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(() => const OrdersScreen());
+                      },
                     ),
                     _buildMenuItem(
                       icon: Icons.person_outline,

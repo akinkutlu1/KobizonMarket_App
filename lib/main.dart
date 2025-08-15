@@ -6,6 +6,7 @@ import 'controllers/cart_controller.dart';
 import 'controllers/product_controller.dart';
 import 'controllers/navigation_controller.dart';
 import 'controllers/location_controller.dart';
+import 'controllers/order_controller.dart';
 import 'services/auth_service.dart';
 
 void main() async {
@@ -19,6 +20,7 @@ void main() async {
   Get.put(ProductController());
   Get.put(NavigationController());
   Get.put(LocationController());
+  Get.put(OrderController());
   Get.put(AuthService());
   
   runApp(const GroceriesApp());

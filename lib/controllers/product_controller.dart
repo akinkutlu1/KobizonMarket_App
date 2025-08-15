@@ -1,8 +1,13 @@
 import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/product.dart';
 import '../models/sample_data.dart';
 
 class ProductController extends GetxController {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  
   final RxList<Product> _products = <Product>[].obs;
   final RxString _selectedCategory = 'All'.obs;
   final RxString _searchQuery = ''.obs;
@@ -20,6 +25,65 @@ class ProductController extends GetxController {
   void onInit() {
     super.onInit();
     loadProducts();
+    
+    // Kullanıcı oturum durumunu dinle
+    _auth.authStateChanges().listen((User? user) {
+      if (user != null) {
+        _loadFavoritesFromFirebase(user.uid);
+      } else {
+        _favouriteProductIds.clear();
+        _favouriteProducts.clear();
+      }
+    });
+  }
+
+  // Firebase'den favori ürünleri yükle
+  Future<void> _loadFavoritesFromFirebase(String userId) async {
+    try {
+      final doc = await _firestore.collection('users').doc(userId).collection('favorites').get();
+      final Set<String> loadedFavorites = {};
+      
+      for (var doc in doc.docs) {
+        final data = doc.data();
+        loadedFavorites.add(data['productId']);
+      }
+      
+      _favouriteProductIds.assignAll(loadedFavorites);
+      _updateFavouriteProducts();
+      print('Favoriler Firebase\'den yüklendi: ${_favouriteProductIds.length} ürün');
+    } catch (e) {
+      print('Favoriler yüklenirken hata: $e');
+    }
+  }
+
+  // Firebase'e favori ürünleri kaydet
+  Future<void> _saveFavoritesToFirebase() async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    try {
+      final batch = _firestore.batch();
+      
+      // Mevcut favori verilerini temizle
+      final existingDocs = await _firestore.collection('users').doc(user.uid).collection('favorites').get();
+      for (var doc in existingDocs.docs) {
+        batch.delete(doc.reference);
+      }
+      
+      // Yeni favori verilerini ekle (sadece ID)
+      _favouriteProductIds.forEach((productId) {
+        final docRef = _firestore.collection('users').doc(user.uid).collection('favorites').doc(productId);
+        batch.set(docRef, {
+          'productId': productId,
+          'addedAt': FieldValue.serverTimestamp(),
+        });
+      });
+      
+      await batch.commit();
+      print('Favoriler Firebase\'e kaydedildi');
+    } catch (e) {
+      print('Favoriler kaydedilirken hata: $e');
+    }
   }
 
   void loadProducts() {
@@ -120,8 +184,9 @@ class ProductController extends GetxController {
       _favouriteProductIds.add(productId);
     }
     _updateFavouriteProducts();
+    _saveFavoritesToFirebase();
     update(); // UI'ı güncelle
-    print('Favoriler güncellendi: ${_favouriteProductIds.length} ürün'); // Debug için
+    print('Favoriler güncellendi: ${_favouriteProductIds.length} ürün');
   }
 
   void _updateFavouriteProducts() {
