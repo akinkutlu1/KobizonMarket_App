@@ -7,6 +7,13 @@ import 'categories_screen.dart';
 import 'favourite_screen.dart';
 import 'cart_screen.dart';
 import 'orders_screen.dart';
+import 'my_information_screen.dart';
+import 'delivery_address_screen.dart';
+import 'payment_methods_screen.dart';
+import 'promo_code_screen.dart';
+import 'notifications_screen.dart';
+import 'help_screen.dart';
+import 'about_screen.dart';
 
 class ProfileScreen extends GetView<AuthService> {
   const ProfileScreen({super.key});
@@ -121,37 +128,51 @@ class ProfileScreen extends GetView<AuthService> {
                     _buildMenuItem(
                       icon: Icons.person_outline,
                       title: 'Bilgilerim',
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(() => const MyInformationScreen());
+                      },
                     ),
                     _buildMenuItem(
                       icon: Icons.location_on_outlined,
                       title: 'Teslimat Adresi',
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(() => const DeliveryAddressScreen());
+                      },
                     ),
                     _buildMenuItem(
                       icon: Icons.credit_card_outlined,
                       title: 'Ödeme Yöntemleri',
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(() => const PaymentMethodsScreen());
+                      },
                     ),
                     _buildMenuItem(
                       icon: Icons.local_offer_outlined,
                       title: 'Promosyon Kodu',
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(() => const PromoCodeScreen());
+                      },
                     ),
                     _buildMenuItem(
                       icon: Icons.notifications_outlined,
                       title: 'Bildirimler',
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(() => const NotificationsScreen());
+                      },
                     ),
                     _buildMenuItem(
                       icon: Icons.help_outline,
                       title: 'Yardım',
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(() => const HelpScreen());
+                      },
                     ),
                     _buildMenuItem(
                       icon: Icons.info_outline,
                       title: 'Hakkında',
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(() => const AboutScreen());
+                      },
                     ),
                   ],
                 ),
