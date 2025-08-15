@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "744650264368",
+    "project_id": "marketapp-e230a",
+    "storage_bucket": "marketapp-e230a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744650264368:android:adcc51adec1a6ac4a302f5",
+        "android_client_info": {
+          "package_name": "com.example.market_app0"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744650264368-i614l2m8r4qa53eh9segksquhnnvc2up.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuPCiWO7LPk1jvbWc0RDQpl45XQdQy-VM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744650264368-i614l2m8r4qa53eh9segksquhnnvc2up.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

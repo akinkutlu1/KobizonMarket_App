@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/user_data_controller.dart';
 import 'verification_screen.dart';
 import 'signup_screen.dart';
 
@@ -11,46 +12,49 @@ class PhoneInputScreen extends StatefulWidget {
 }
 
 class _PhoneInputScreenState extends State<PhoneInputScreen> {
-  final TextEditingController _phoneController = TextEditingController();
+  final PhoneInputController _phoneController = Get.put(PhoneInputController());
+  final TextEditingController _phoneTextController = TextEditingController();
   bool _showContinueButton = false;
 
   @override
   void initState() {
     super.initState();
-    _phoneController.addListener(_onPhoneChanged);
+    _phoneTextController.addListener(_onPhoneChanged);
   }
 
   @override
   void dispose() {
-    _phoneController.removeListener(_onPhoneChanged);
-    _phoneController.dispose();
+    _phoneTextController.removeListener(_onPhoneChanged);
+    _phoneTextController.dispose();
     super.dispose();
   }
 
   void _onPhoneChanged() {
     setState(() {
-      _showContinueButton = _phoneController.text.length >= 10;
+      _showContinueButton = _phoneTextController.text.length >= 10;
     });
   }
 
   void _onContinuePressed() {
-    if (_phoneController.text.length >= 10) {
+    if (_phoneTextController.text.length >= 10) {
+      // Telefon numarasını controller'a kaydet
+      _phoneController.updatePhoneNumber('+90${_phoneTextController.text}');
       Get.to(() => const SignupScreen());
     }
   }
 
   void _onNumberPressed(String number) {
-    if (_phoneController.text.length < 10) {
+    if (_phoneTextController.text.length < 10) {
       setState(() {
-        _phoneController.text += number;
+        _phoneTextController.text += number;
       });
     }
   }
 
   void _onBackspacePressed() {
-    if (_phoneController.text.isNotEmpty) {
+    if (_phoneTextController.text.isNotEmpty) {
       setState(() {
-        _phoneController.text = _phoneController.text.substring(0, _phoneController.text.length - 1);
+        _phoneTextController.text = _phoneTextController.text.substring(0, _phoneTextController.text.length - 1);
       });
     }
   }
@@ -156,10 +160,10 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                       ),
                       const SizedBox(width: 8),
                       
-                      // Phone Number Input
-                      Expanded(
-                        child: TextField(
-                          controller: _phoneController,
+                                             // Phone Number Input
+                       Expanded(
+                         child: TextField(
+                           controller: _phoneTextController,
                           keyboardType: TextInputType.phone,
                           autofocus: true,
                           style: const TextStyle(

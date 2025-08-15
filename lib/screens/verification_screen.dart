@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../services/auth_service.dart';
+import '../controllers/user_data_controller.dart';
 import 'location_screen.dart';
 
 class VerificationScreen extends StatefulWidget {
@@ -10,6 +12,7 @@ class VerificationScreen extends StatefulWidget {
 }
 
 class _VerificationScreenState extends State<VerificationScreen> {
+  final AuthService _authService = Get.find<AuthService>();
   final List<TextEditingController> _controllers = List.generate(4, (_) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
   String _code = '';
@@ -39,9 +42,27 @@ class _VerificationScreenState extends State<VerificationScreen> {
     });
   }
 
-  void _onContinuePressed() {
+  void _onContinuePressed() async {
     if (_code.length == 4) {
-      Get.to(() => const LocationScreen());
+      // Firebase ile doğrulama kodunu kontrol et
+      final isVerified = await _authService.verifyPhoneCode(_code);
+      
+      if (isVerified) {
+        // Kullanıcı bilgilerini Firebase'e kaydet
+        final userDataController = Get.find<UserDataController>();
+        await _authService.updateUserProfile(
+          firstName: userDataController.firstName,
+          lastName: userDataController.lastName,
+          username: userDataController.username,
+          email: userDataController.email,
+          password: userDataController.password,
+        );
+        
+        // Kullanıcı verilerini temizle
+        userDataController.clearData();
+        
+        Get.to(() => const LocationScreen());
+      }
     }
   }
 
@@ -69,19 +90,17 @@ class _VerificationScreenState extends State<VerificationScreen> {
     }
   }
 
-  void _onResendCode() {
-    for (int i = 0; i < 4; i++) {
-      _controllers[i].clear();
+  void _onResendCode() async {
+    // Telefon numarasını al ve yeni kod gönder
+    final phoneNumber = Get.find<PhoneInputController>().phoneNumber;
+    if (phoneNumber.isNotEmpty) {
+      await _authService.sendPhoneVerificationCode(phoneNumber);
+      
+      for (int i = 0; i < 4; i++) {
+        _controllers[i].clear();
+      }
+      _focusNodes[0].requestFocus();
     }
-    _focusNodes[0].requestFocus();
-    Get.snackbar(
-      'SMS Kodu Yeniden Gönderildi',
-      'Yeni doğrulama kodu telefonunuza SMS olarak gönderildi',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: const Color(0xFF53B175),
-      colorText: Colors.white,
-      duration: const Duration(seconds: 2),
-    );
   }
 
   Widget _buildKeypadButton(String text, {String? subtitle, VoidCallback? onPressed, bool isSpecial = false}) {
@@ -158,6 +177,35 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       height: 1.4,
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF53B175).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: const Color(0xFF53B175).withOpacity(0.3)),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          color: Color(0xFF53B175),
+                          size: 20,
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Test sürümü: Doğrulama kodu 0000',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF53B175),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   const Text(
                     'Doğrulama Kodu',
@@ -224,29 +272,39 @@ class _VerificationScreenState extends State<VerificationScreen> {
             const SizedBox(height: 40),
             
             // Continue Button
-            if (_showContinueButton)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: _onContinuePressed,
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF53B175),
-                        shape: BoxShape.circle,
+            _showContinueButton
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Obx(() => GestureDetector(
+                      onTap: _authService.isLoading ? null : _onContinuePressed,
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF53B175),
+                          shape: BoxShape.circle,
+                        ),
+                        child: _authService.isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(
+                                Icons.arrow_forward,
+                                color: Colors.white,
+                                size: 24,
+                              ),
                       ),
-                      child: const Icon(
-                        Icons.arrow_forward,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                    ),
+                    )),
                   ),
-                ),
-              ),
+                )
+              : const SizedBox.shrink(),
             
             const SizedBox(height: 40),
             

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/navigation_controller.dart';
+import '../services/auth_service.dart';
 import 'home_screen.dart';
 import 'categories_screen.dart';
 import 'favourite_screen.dart';
 import 'cart_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends GetView<AuthService> {
   const ProfileScreen({super.key});
 
   @override
@@ -47,44 +48,58 @@ class ProfileScreen extends StatelessWidget {
                   
                   // User Info
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Text(
-                              'Afsar Hossen',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
+                    child: Obx(() {
+                      final userData = controller.userData;
+                      print('ProfileScreen - userData: $userData');
+                      print('ProfileScreen - user: ${controller.user}');
+                      
+                      final displayName = userData != null 
+                          ? '${userData['firstName'] ?? ''} ${userData['lastName'] ?? ''}'.trim()
+                          : controller.user?.displayName ?? 'Kullanıcı';
+                      final email = userData?['email'] ?? controller.user?.email ?? 'email@example.com';
+                      
+                      print('ProfileScreen - displayName: $displayName');
+                      print('ProfileScreen - email: $email');
+                      
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                displayName.isNotEmpty ? displayName : 'Kullanıcı',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF53B175),
-                                borderRadius: BorderRadius.circular(12),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF53B175),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
                               ),
-                              child: const Icon(
-                                Icons.edit,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        const Text(
-                          'lmshuvo97@gmail.com',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
+                          const SizedBox(height: 4),
+                          Text(
+                            email,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
                   ),
                 ],
               ),
@@ -293,15 +308,11 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               Get.back();
-              // Çıkış işlemleri burada yapılacak
-              Get.snackbar(
-                'Başarılı',
-                'Başarıyla çıkış yapıldı',
-                backgroundColor: const Color(0xFF53B175),
-                colorText: Colors.white,
-              );
+              // Firebase'den çıkış yap
+              final authService = Get.find<AuthService>();
+              await authService.signOut();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF53B175),

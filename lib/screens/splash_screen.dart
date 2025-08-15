@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
 import '../controllers/navigation_controller.dart';
+import '../services/auth_service.dart';
 import 'home_screen.dart';
 import 'categories_screen.dart';
 import 'cart_screen.dart';
@@ -20,10 +21,22 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // 3 saniye sonra welcome sayfasına geç
+    // 3 saniye sonra oturum kontrolü yap
     Timer(const Duration(seconds: 3), () {
-      Get.offAll(() => const WelcomeScreen());
+      _checkAuthStatus();
     });
+  }
+
+  void _checkAuthStatus() {
+    final authService = Get.find<AuthService>();
+    
+    if (authService.isLoggedIn) {
+      // Oturum açıksa HomeScreen'e git
+      Get.offAll(() => const HomeScreen());
+    } else {
+      // Oturum açık değilse WelcomeScreen'e git
+      Get.offAll(() => const WelcomeScreen());
+    }
   }
 
   @override

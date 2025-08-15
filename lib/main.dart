@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'screens/splash_screen.dart';
 import 'controllers/cart_controller.dart';
 import 'controllers/product_controller.dart';
 import 'controllers/navigation_controller.dart';
 import 'controllers/location_controller.dart';
+import 'services/auth_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Firebase'i başlat
+  await Firebase.initializeApp();
+  
   // Controllers'ları başlat
   Get.put(CartController());
   Get.put(ProductController());
   Get.put(NavigationController());
   Get.put(LocationController());
+  Get.put(AuthService());
   
   runApp(const GroceriesApp());
 }

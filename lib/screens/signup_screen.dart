@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
+import '../services/auth_service.dart';
+import '../controllers/user_data_controller.dart';
 import 'login_screen.dart';
 import 'verification_screen.dart';
 
@@ -12,6 +14,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final AuthService _authService = Get.put(AuthService());
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
@@ -24,16 +27,6 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   void initState() {
     super.initState();
-    // Pre-fill with sample data
-    _firstNameController.text = 'Afsar';
-    _lastNameController.text = 'Hossen Shuvo';
-    _usernameController.text = 'Afsar Hossen Shuvo';
-    _emailController.text = 'imshuvo97@gmail.com';
-    _passwordController.text = 'password123';
-    
-    // Set email as valid initially
-    _isEmailValid = true;
-    
     // Listen to email changes for validation
     _emailController.addListener(_validateEmail);
   }
@@ -104,6 +97,8 @@ class _SignupScreenState extends State<SignupScreen> {
               // First Name Field
               TextField(
                 controller: _firstNameController,
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.name,
                 decoration: InputDecoration(
                   labelText: 'Ad',
                   labelStyle: const TextStyle(color: Colors.grey),
@@ -129,6 +124,8 @@ class _SignupScreenState extends State<SignupScreen> {
               // Last Name Field
               TextField(
                 controller: _lastNameController,
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.name,
                 decoration: InputDecoration(
                   labelText: 'Soyad',
                   labelStyle: const TextStyle(color: Colors.grey),
@@ -154,6 +151,8 @@ class _SignupScreenState extends State<SignupScreen> {
               // Username Field
               TextField(
                 controller: _usernameController,
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   labelText: 'Kullanıcı Adı',
                   labelStyle: const TextStyle(color: Colors.grey),
@@ -179,6 +178,8 @@ class _SignupScreenState extends State<SignupScreen> {
               // Email Field
               TextField(
                 controller: _emailController,
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   labelText: 'E-posta',
                   labelStyle: const TextStyle(color: Colors.grey),
@@ -300,26 +301,82 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(
                 width: double.infinity,
                 height: 56,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: Implement signup logic
-                    Get.to(() => const VerificationScreen());
-                  },
+                child: Obx(() => ElevatedButton(
+                  onPressed: _authService.isLoading
+                      ? null
+                      : () async {
+                          // Form validasyonu
+                          if (_firstNameController.text.isEmpty ||
+                              _lastNameController.text.isEmpty ||
+                              _usernameController.text.isEmpty ||
+                              _emailController.text.isEmpty ||
+                              _passwordController.text.isEmpty) {
+                            Get.snackbar(
+                              'Hata',
+                              'Lütfen tüm alanları doldurun',
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                            return;
+                          }
+
+                          if (!_isEmailValid) {
+                            Get.snackbar(
+                              'Hata',
+                              'Geçerli bir e-posta adresi girin',
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                            return;
+                          }
+
+                          // Kullanıcı bilgilerini sakla (verification_screen.dart'ta kullanılacak)
+                          Get.put(UserDataController()).updateUserData(
+                            firstName: _firstNameController.text,
+                            lastName: _lastNameController.text,
+                            username: _usernameController.text,
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                          );
+
+                          // Telefon doğrulama kodunu gönder
+                          final phoneNumber = Get.find<PhoneInputController>().phoneNumber;
+                          if (phoneNumber.isNotEmpty) {
+                            await _authService.sendPhoneVerificationCode(phoneNumber);
+                            Get.to(() => const VerificationScreen());
+                          } else {
+                            Get.snackbar(
+                              'Hata',
+                              'Telefon numarası bulunamadı',
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                          }
+                        },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF53B175),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: const Text(
-                    'Kayıt Ol',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+                  child: _authService.isLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          'Kayıt Ol',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                )),
               ),
 
               const SizedBox(height: 24),

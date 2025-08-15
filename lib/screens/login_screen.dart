@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../services/auth_service.dart';
 import 'signin_screen.dart';
 import 'home_screen.dart';
 
@@ -18,9 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    // Pre-fill with sample data
-    _emailController.text = 'imshuvo97@gmail.com';
-    _passwordController.text = 'password123';
+    // Boş başlat
   }
 
   @override
@@ -168,9 +167,35 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: Implement login logic
-                    Get.offAll(() => const HomeScreen());
+                  onPressed: () async {
+                    // Form validasyonu
+                    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+                      Get.snackbar(
+                        'Hata',
+                        'Lütfen e-posta ve şifre girin',
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
+                      return;
+                    }
+
+                    try {
+                      // Firebase ile giriş yap
+                      final authService = Get.find<AuthService>();
+                      await authService.signInWithEmailAndPassword(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      );
+                      
+                      Get.offAll(() => const HomeScreen());
+                    } catch (e) {
+                      Get.snackbar(
+                        'Hata',
+                        'Giriş başarısız: $e',
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF53B175),
