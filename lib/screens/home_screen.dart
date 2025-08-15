@@ -20,6 +20,10 @@ class HomeScreen extends GetView<ProductController> {
 
   @override
   Widget build(BuildContext context) {
+    // Sayfa açıldığında en çok tıklanan ürünleri yeniden yükle
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.loadMostClickedProducts();
+    });
     final TextEditingController _searchController = TextEditingController();
     final PageController _pageController = PageController();
     final RxInt _currentPage = 0.obs;
@@ -170,12 +174,12 @@ class HomeScreen extends GetView<ProductController> {
 
                 const SizedBox(height: 24),
 
-                // Exclusive Offer Section
+                // En Çok Tıklanan Ürünler
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Exclusive Offer',
+                      'En Çok Tıklananlar',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -183,9 +187,11 @@ class HomeScreen extends GetView<ProductController> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(() => const CategoriesScreen());
+                      },
                       child: const Text(
-                        'See all',
+                        'Tümünü Gör',
                         style: TextStyle(
                           color: Color(0xFF53B175),
                           fontWeight: FontWeight.w600,
@@ -197,44 +203,41 @@ class HomeScreen extends GetView<ProductController> {
 
                 const SizedBox(height: 16),
 
-                // Exclusive Products
-                SizedBox(
-                  height: 170,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      _buildExclusiveProductCard(
-                        imagePath: 'assets/images/muz.png',
-                        title: 'Fresh Bananas',
-                        subtitle: '7pcs, Priceg',
-                        price: '\$4.99',
+                Obx(() {
+                  final mostClickedProducts = controller.mostClickedProducts;
+                  if (mostClickedProducts.isEmpty) {
+                    return const SizedBox(
+                      height: 170,
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
-                      const SizedBox(width: 16),
-                      _buildExclusiveProductCard(
-                        imagePath: 'assets/images/elma.png',
-                        title: 'Fresh Apple',
-                        subtitle: '1kg, Priceg',
-                        price: '\$4.99',
-                      ),
-                      const SizedBox(width: 16),
-                      _buildExclusiveProductCard(
-                        imagePath: 'assets/images/zencefil.png',
-                        title: 'Ginger & Mint',
-                        subtitle: '250g, Priceg',
-                        price: '\$3.99',
-                      ),
-                    ],
-                  ),
-                ),
+                    );
+                  }
+                  
+                  return SizedBox(
+                    height: 170,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: mostClickedProducts.length,
+                      itemBuilder: (context, index) {
+                        final product = mostClickedProducts[index];
+                        return Padding(
+                          padding: EdgeInsets.only(right: index < mostClickedProducts.length - 1 ? 16 : 0),
+                          child: _buildProductCard(product),
+                        );
+                      },
+                    ),
+                  );
+                }),
 
                 const SizedBox(height: 24),
 
-                // Best Selling Section
+                // Öne Çıkan Ürünler
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Best Selling',
+                      'Öne Çıkan Ürünler',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -242,9 +245,11 @@ class HomeScreen extends GetView<ProductController> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(() => const CategoriesScreen());
+                      },
                       child: const Text(
-                        'See all',
+                        'Tümünü Gör',
                         style: TextStyle(
                           color: Color(0xFF53B175),
                           fontWeight: FontWeight.w600,
@@ -256,35 +261,35 @@ class HomeScreen extends GetView<ProductController> {
 
                 const SizedBox(height: 16),
 
-                // Best Selling Products
-                SizedBox(
-                  height: 170,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      _buildExclusiveProductCard(
-                        imagePath: 'assets/images/biber1.png',
-                        title: 'Bell Pepper',
-                        subtitle: '1kg, Priceg',
-                        price: '\$2.99',
+                // Öne Çıkan Ürünler
+                Obx(() {
+                  final products = controller.products;
+                  final featuredProducts = products.where((p) => p.rating >= 4.5).take(6).toList();
+                  
+                  if (featuredProducts.isEmpty) {
+                    return const SizedBox(
+                      height: 170,
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
-                      const SizedBox(width: 16),
-                      _buildExclusiveProductCard(
-                        imagePath: 'assets/images/zencefil.png',
-                        title: 'Ginger & Mint',
-                        subtitle: '500g, Priceg',
-                        price: '\$5.99',
-                      ),
-                      const SizedBox(width: 16),
-                      _buildExclusiveProductCard(
-                        imagePath: 'assets/images/elma.png',
-                        title: 'Fresh Apple',
-                        subtitle: '1kg, Priceg',
-                        price: '\$3.99',
-                      ),
-                    ],
-                  ),
-                ),
+                    );
+                  }
+                  
+                  return SizedBox(
+                    height: 170,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: featuredProducts.length,
+                      itemBuilder: (context, index) {
+                        final product = featuredProducts[index];
+                        return Padding(
+                          padding: EdgeInsets.only(right: index < featuredProducts.length - 1 ? 16 : 0),
+                          child: _buildProductCard(product),
+                        );
+                      },
+                    ),
+                  );
+                }),
               ],
             ),
           ),
@@ -344,36 +349,11 @@ class HomeScreen extends GetView<ProductController> {
     );
   }
 
-  Widget _buildExclusiveProductCard({
-    required String imagePath,
-    required String title,
-    String? subtitle,
-    required String price,
-    String? size,
-  }) {
+  Widget _buildProductCard(Product product) {
     return GestureDetector(
       onTap: () {
-        // Find product from SampleData
-        final productController = Get.find<ProductController>();
-        print('HomeScreen - Aranan ürün adı: $title');
-        print('HomeScreen - Mevcut ürünler: ${productController.products.map((p) => p.name).toList()}');
-        
-        final product = productController.products.firstWhere(
-          (p) => p.name == title,
-          orElse: () {
-            print('HomeScreen - Ürün bulunamadı, geçici ürün oluşturuluyor');
-            return Product(
-              id: 'temp_${title.hashCode}',
-              name: title,
-              description: subtitle ?? '',
-              price: double.tryParse(price.replaceAll('\$', '')) ?? 0.0,
-              imageUrl: imagePath,
-              category: 'Exclusive',
-              categoryId: 1, // Geçici ürün için varsayılan kategori ID
-              unit: subtitle?.split(', ').last ?? 'piece',
-            );
-          },
-        );
+        // Ürün tıklama sayısını artır
+        controller.incrementProductClick(product.id);
         Get.to(() => ProductDetailScreen(product: product));
       },
       child: Container(
@@ -403,29 +383,50 @@ class HomeScreen extends GetView<ProductController> {
                   children: [
                     Center(
                       child: Image.asset(
-                        imagePath,
+                        product.imageUrl,
                         fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(
+                            Icons.image_not_supported,
+                            size: 40,
+                            color: Colors.grey,
+                          );
+                        },
                       ),
                     ),
-                    if (size != null)
-                      Positioned(
-                        top: 0,
-                        left: 0,
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: GestureDetector(
+                        onTap: () {
+                          controller.toggleFavorite(product.id);
+                        },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                          padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(4),
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                spreadRadius: 1,
+                                blurRadius: 3,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
                           ),
-                          child: Text(
-                            size,
-                            style: const TextStyle(
-                              fontSize: 8,
-                              color: Colors.white,
-                            ),
-                          ),
+                          child: Obx(() => Icon(
+                            controller.favouriteProductIds.contains(product.id)
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            size: 16,
+                            color: controller.favouriteProductIds.contains(product.id)
+                                ? Colors.red
+                                : Colors.grey,
+                          )),
                         ),
                       ),
+                    ),
                   ],
                 ),
               ),
@@ -441,7 +442,7 @@ class HomeScreen extends GetView<ProductController> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      title,
+                      product.name,
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -450,22 +451,20 @@ class HomeScreen extends GetView<ProductController> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    if (subtitle != null) ...[
-                      const SizedBox(height: 1),
-                      Text(
-                        subtitle,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
+                    const SizedBox(height: 1),
+                    Text(
+                      '${product.unit}, ${product.category}',
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey,
                       ),
-                    ],
+                    ),
                     const Spacer(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          price,
+                          '₺${product.price.toStringAsFixed(2)}',
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -476,22 +475,6 @@ class HomeScreen extends GetView<ProductController> {
                           onTap: () {
                             // Add to cart functionality
                             final cartController = Get.find<CartController>();
-                            final productController = Get.find<ProductController>();
-                            
-                            // Find the product from SampleData
-                            final product = productController.products.firstWhere(
-                              (p) => p.name == title,
-                              orElse: () => Product(
-                                id: 'temp_${title.hashCode}',
-                                name: title,
-                                description: subtitle ?? '',
-                                price: double.tryParse(price.replaceAll('\$', '')) ?? 0.0,
-                                imageUrl: imagePath,
-                                category: 'Exclusive',
-                                categoryId: 1, // Geçici ürün için varsayılan kategori ID
-                                unit: subtitle?.split(', ').last ?? 'piece',
-                              ),
-                            );
                             
                             cartController.addItem(product);
                             Get.snackbar(

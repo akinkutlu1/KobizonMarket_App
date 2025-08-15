@@ -230,7 +230,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                           // Price
                           Text(
-                            '\$${(widget.product.price * quantity).toStringAsFixed(2)}',
+                            '₺${(widget.product.price * quantity).toStringAsFixed(2)}',
                             style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,

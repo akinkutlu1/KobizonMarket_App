@@ -19,6 +19,8 @@ class ProductCard extends GetView<CartController> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        // Ürün tıklama sayısını artır
+        productController.incrementProductClick(product.id);
         Get.to(() => ProductDetailScreen(product: product));
       },
       child: Container(

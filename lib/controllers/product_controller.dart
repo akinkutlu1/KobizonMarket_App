@@ -13,6 +13,7 @@ class ProductController extends GetxController {
   final RxString _searchQuery = ''.obs;
   final RxSet<String> _favouriteProductIds = <String>{}.obs;
   final RxList<Product> _favouriteProducts = <Product>[].obs;
+  final RxList<Product> _mostClickedProducts = <Product>[].obs;
 
   List<Product> get products => _products;
   String get selectedCategory => _selectedCategory.value;
@@ -20,11 +21,13 @@ class ProductController extends GetxController {
   Set<String> get favouriteProductIds => _favouriteProductIds;
   
   RxList<Product> get favouriteProducts => _favouriteProducts;
+  RxList<Product> get mostClickedProducts => _mostClickedProducts;
 
   @override
   void onInit() {
     super.onInit();
     loadProducts();
+    loadMostClickedProducts();
     
     // Kullanıcı oturum durumunu dinle
     _auth.authStateChanges().listen((User? user) {
@@ -88,6 +91,70 @@ class ProductController extends GetxController {
 
   void loadProducts() {
     _products.assignAll(SampleData.products);
+  }
+
+  // En çok tıklanan ürünleri yükle
+  Future<void> loadMostClickedProducts() async {
+    try {
+      final snapshot = await _firestore.collection('product_clicks').orderBy('clickCount', descending: true).limit(6).get();
+      final List<Product> mostClicked = [];
+      
+      for (var doc in snapshot.docs) {
+        final data = doc.data();
+        final productId = data['productId'] as String;
+        
+        // SampleData'dan ürünü bul
+        final product = _products.firstWhere(
+          (p) => p.id == productId,
+          orElse: () => _products.first, // Eğer bulunamazsa ilk ürünü kullan
+        );
+        
+        mostClicked.add(product);
+      }
+      
+      // Eğer Firebase'de veri yoksa, varsayılan olarak ilk 6 ürünü göster
+      if (mostClicked.isEmpty && _products.isNotEmpty) {
+        mostClicked.addAll(_products.take(6));
+      }
+      
+      _mostClickedProducts.assignAll(mostClicked);
+      print('En çok tıklanan ürünler yüklendi: ${mostClicked.length} ürün');
+    } catch (e) {
+      print('En çok tıklanan ürünler yüklenirken hata: $e');
+      // Hata durumunda varsayılan olarak ilk 6 ürünü göster
+      if (_products.isNotEmpty) {
+        _mostClickedProducts.assignAll(_products.take(6));
+      }
+    }
+  }
+
+  // Ürün tıklama sayısını artır
+  Future<void> incrementProductClick(String productId) async {
+    try {
+      final docRef = _firestore.collection('product_clicks').doc(productId);
+      
+      await _firestore.runTransaction((transaction) async {
+        final doc = await transaction.get(docRef);
+        
+        if (doc.exists) {
+          final currentCount = doc.data()!['clickCount'] ?? 0;
+          transaction.update(docRef, {'clickCount': currentCount + 1});
+        } else {
+          transaction.set(docRef, {
+            'productId': productId,
+            'clickCount': 1,
+            'lastClicked': FieldValue.serverTimestamp(),
+          });
+        }
+      });
+      
+      print('Ürün tıklama sayısı artırıldı: $productId');
+      
+      // Tıklama sonrası en çok tıklanan ürünleri yeniden yükle
+      await loadMostClickedProducts();
+    } catch (e) {
+      print('Ürün tıklama sayısı artırılırken hata: $e');
+    }
   }
 
   void setSelectedCategory(String category) {

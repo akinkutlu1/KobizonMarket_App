@@ -222,7 +222,7 @@ class FavouriteScreen extends GetView<ProductController> {
           Row(
             children: [
               Text(
-                '\$${product.price.toStringAsFixed(2)}',
+                '₺${product.price.toStringAsFixed(2)}',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
