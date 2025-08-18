@@ -38,6 +38,15 @@ dependencies:
   firebase_core: ^3.15.2
   firebase_auth: ^5.7.0
   cloud_firestore: ^5.6.12
+  flutter_launcher_icons: ^0.14.4
+
+# Flutter Launcher Icons configuration
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/iconn/android/res/mipmap-xxhdpi/ic_launcher.png"
+  adaptive_icon_padding: 0
+  adaptive_icon_background: "#53B175"
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +75,7 @@ flutter:
     - assets/images/
     - assets/images/products/
     - assets/freshVegetables/
+    - assets/iconn/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
