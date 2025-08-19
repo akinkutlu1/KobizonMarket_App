@@ -7,13 +7,23 @@ import 'controllers/product_controller.dart';
 import 'controllers/navigation_controller.dart';
 import 'controllers/location_controller.dart';
 import 'controllers/order_controller.dart';
+import 'controllers/user_data_controller.dart';
 import 'services/auth_service.dart';
+import 'services/support_service.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Firebase'i başlat
-  await Firebase.initializeApp();
+  try {
+    // Firebase'i başlat
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print('Firebase başarıyla başlatıldı');
+  } catch (e) {
+    print('Firebase başlatılırken hata: $e');
+  }
   
   // Controllers'ları başlat
   Get.put(CartController());
@@ -21,7 +31,9 @@ void main() async {
   Get.put(NavigationController());
   Get.put(LocationController());
   Get.put(OrderController());
+  Get.put(UserDataController());
   Get.put(AuthService());
+  Get.put(SupportService());
   
   runApp(const GroceriesApp());
 }

@@ -254,6 +254,20 @@ class _MyInformationScreenState extends State<MyInformationScreen> {
   }
 
   Future<void> _saveUserData() async {
+    // Form validasyonu
+    if (_firstNameController.text.trim().isEmpty ||
+        _lastNameController.text.trim().isEmpty ||
+        _usernameController.text.trim().isEmpty) {
+      Get.snackbar(
+        'Hata',
+        'Ad, soyad ve kullanıcı adı alanları zorunludur',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
@@ -262,20 +276,19 @@ class _MyInformationScreenState extends State<MyInformationScreen> {
       // UserDataController'a kaydet
       final userDataController = Get.find<UserDataController>();
       userDataController.updateUserData(
-        firstName: _firstNameController.text,
-        lastName: _lastNameController.text,
-        username: _usernameController.text,
-        email: _emailController.text,
+        firstName: _firstNameController.text.trim(),
+        lastName: _lastNameController.text.trim(),
+        username: _usernameController.text.trim(),
+        email: _emailController.text.trim(),
         password: '', // Şifre değişikliği yok
       );
 
       // Firebase'e güncelle
-      await _authService.updateUserProfile(
-        firstName: _firstNameController.text,
-        lastName: _lastNameController.text,
-        username: _usernameController.text,
-        email: _emailController.text,
-        password: '', // Şifre değişikliği yok
+      await _authService.updateExistingUserProfile(
+        firstName: _firstNameController.text.trim(),
+        lastName: _lastNameController.text.trim(),
+        username: _usernameController.text.trim(),
+        email: _emailController.text.trim(),
       );
 
       Get.snackbar(
@@ -288,7 +301,7 @@ class _MyInformationScreenState extends State<MyInformationScreen> {
     } catch (e) {
       Get.snackbar(
         'Hata',
-        'Bilgiler güncellenirken bir hata oluştu',
+        'Bilgiler güncellenirken bir hata oluştu: $e',
         backgroundColor: Colors.red,
         colorText: Colors.white,
         duration: const Duration(seconds: 3),

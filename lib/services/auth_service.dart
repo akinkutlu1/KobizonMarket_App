@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import '../screens/welcome_screen.dart';
 import '../controllers/user_data_controller.dart';
+import '../services/support_service.dart'; // Added import for SupportService
 
 class AuthService extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -182,6 +183,132 @@ class AuthService extends GetxController {
     }
   }
 
+  // Firebase bağlantısını test et
+  Future<bool> testFirebaseConnection() async {
+    try {
+      print('Firebase bağlantısı test ediliyor...');
+      await _firestore.collection('test').doc('test').get();
+      print('Firebase bağlantısı başarılı');
+      return true;
+    } catch (e) {
+      print('Firebase bağlantı hatası: $e');
+      return false;
+    }
+  }
+
+  // Mevcut kullanıcının profil bilgilerini güncelle
+  Future<void> updateExistingUserProfile({
+    required String firstName,
+    required String lastName,
+    required String username,
+    required String email,
+  }) async {
+    try {
+      print('Profil güncelleme başlatılıyor...');
+      
+      // Firebase bağlantısını test et
+      final isConnected = await testFirebaseConnection();
+      if (!isConnected) {
+        throw Exception('Firebase bağlantısı kurulamadı. Lütfen internet bağlantınızı kontrol edin.');
+      }
+      
+      // Kullanıcı kimlik doğrulamasını kontrol et
+      final isAuthenticated = await isUserAuthenticated();
+      if (!isAuthenticated) {
+        throw Exception('Kullanıcı kimlik doğrulaması başarısız. Lütfen tekrar giriş yapın.');
+      }
+      
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('Kullanıcı giriş yapmamış');
+      }
+      
+      print('Mevcut kullanıcı ID: ${currentUser.uid}');
+      print('Mevcut kullanıcı email: ${currentUser.email}');
+
+      // Display name'i güncelle
+      print('Display name güncelleniyor...');
+      await currentUser.updateDisplayName('$firstName $lastName');
+      print('Display name güncellendi: ${currentUser.displayName}');
+      
+      // Mevcut kullanıcı verilerini al
+      final currentUserData = _userData.value ?? {};
+      print('Mevcut kullanıcı verileri: $currentUserData');
+      
+      // Kullanıcı dokümanının var olup olmadığını kontrol et
+      final userDoc = await _firestore.collection('users').doc(currentUser.uid).get();
+      if (!userDoc.exists) {
+        print('Kullanıcı dokümanı bulunamadı, yeni doküman oluşturuluyor...');
+        // Yeni kullanıcı dokümanı oluştur
+        final newUserData = {
+          'firstName': firstName,
+          'lastName': lastName,
+          'username': username,
+          'email': email,
+          'phoneNumber': currentUserData['phoneNumber'] ?? '',
+          'createdAt': FieldValue.serverTimestamp(),
+          'updatedAt': FieldValue.serverTimestamp(),
+        };
+        await _firestore.collection('users').doc(currentUser.uid).set(newUserData);
+        print('Yeni kullanıcı dokümanı oluşturuldu');
+      } else {
+        print('Kullanıcı dokümanı mevcut, güncelleniyor...');
+        // Firestore'daki kullanıcı bilgilerini güncelle
+        final userData = {
+          'firstName': firstName,
+          'lastName': lastName,
+          'username': username,
+          'email': email,
+          'phoneNumber': currentUserData['phoneNumber'] ?? '', // Mevcut telefon numarasını koru
+          'updatedAt': FieldValue.serverTimestamp(),
+        };
+        
+        print('Firestore\'a güncellenecek veri: $userData');
+        print('Firestore koleksiyonu: users, doküman ID: ${currentUser.uid}');
+        
+        await _firestore.collection('users').doc(currentUser.uid).update(userData);
+        print('Firestore güncelleme tamamlandı');
+      }
+      
+      // Kullanıcı bilgilerini yeniden yükle
+      print('Kullanıcı bilgileri yeniden yükleniyor...');
+      await _loadUserData(currentUser.uid);
+      print('Kullanıcı bilgileri yeniden yüklendi');
+      
+      Get.snackbar(
+        'Başarılı',
+        'Profil bilgileriniz güncellendi!',
+        backgroundColor: const Color(0xFF53B175),
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      print('Profil güncellenirken hata: $e');
+      print('Hata detayı: ${e.toString()}');
+      
+      String errorMessage = 'Profil güncellenirken hata oluştu';
+      
+      if (e.toString().contains('permission-denied')) {
+        errorMessage = 'Firestore erişim izni reddedildi. Lütfen Firebase kurallarını kontrol edin.';
+      } else if (e.toString().contains('not-found')) {
+        errorMessage = 'Kullanıcı dokümanı bulunamadı. Lütfen tekrar giriş yapın.';
+      } else if (e.toString().contains('unavailable')) {
+        errorMessage = 'Firebase servisi şu anda kullanılamıyor. Lütfen internet bağlantınızı kontrol edin.';
+      } else if (e.toString().contains('unauthenticated')) {
+        errorMessage = 'Kullanıcı kimlik doğrulaması başarısız. Lütfen tekrar giriş yapın.';
+      } else if (e.toString().contains('Firebase bağlantısı kurulamadı')) {
+        errorMessage = 'Firebase bağlantısı kurulamadı. Lütfen internet bağlantınızı kontrol edin.';
+      }
+      
+      Get.snackbar(
+        'Hata',
+        errorMessage,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      rethrow;
+    }
+  }
+
   // E-posta ile giriş yap
   Future<void> signInWithEmailAndPassword({
     required String email,
@@ -192,6 +319,14 @@ class AuthService extends GetxController {
         email: email,
         password: password,
       );
+      
+      // SupportService'e kullanıcı giriş yaptığını bildir
+      try {
+        final supportService = Get.find<SupportService>();
+        supportService.onUserLogin();
+      } catch (e) {
+        print('SupportService bulunamadı: $e');
+      }
       
       Get.snackbar(
         'Başarılı',
@@ -226,8 +361,25 @@ class AuthService extends GetxController {
     }
   }
 
-  // Kullanıcı durumunu kontrol et
+  // Kullanıcı kimlik doğrulama durumunu kontrol et
   bool get isLoggedIn => _auth.currentUser != null;
+
+  // Kullanıcının kimlik doğrulama durumunu detaylı kontrol et
+  Future<bool> isUserAuthenticated() async {
+    try {
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) {
+        return false;
+      }
+      
+      // Token'ın geçerli olup olmadığını kontrol et
+      final token = await currentUser.getIdToken();
+      return token != null && token.isNotEmpty;
+    } catch (e) {
+      print('Kimlik doğrulama kontrolü hatası: $e');
+      return false;
+    }
+  }
 }
 
 // Doğrulama ID'sini saklamak için controller

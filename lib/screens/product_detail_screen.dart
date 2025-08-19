@@ -244,15 +244,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                       // Product Detail Section
                       _buildExpandableSection(
-                        title: 'Product Detail',
-                        content: 'Apples Are Nutritious. Apples May Be Good For Weight Loss. Apples May Be Good For Your Heart. As Part Of A Healtful And Varied Diet.',
+                        title: 'Ürün Hakkında',
+                        content: '%100 taze ve organik olup, sağlığınız için hiçbir sakınca teşkil etmez.',
                       ),
 
                       const SizedBox(height: 12),
 
                       // Nutritions Section
                       _buildExpandableSection(
-                        title: 'Nutritions',
+                        title: 'Miktar',
                         trailing: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
@@ -260,7 +260,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: const Text(
-                            '100gr',
+                            '1000gr',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey,
@@ -273,7 +273,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                       // Review Section
                       _buildExpandableSection(
-                        title: 'Review',
+                        title: 'Ürün Puanı',
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: List.generate(5, (index) => const Icon(
@@ -315,7 +315,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             elevation: 0,
                           ),
                           child: const Text(
-                            'Add To Basket',
+                            'Sepete Ekle',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,

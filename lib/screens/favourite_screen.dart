@@ -15,7 +15,7 @@ class FavouriteScreen extends GetView<ProductController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Favorurite'),
+        title: const Text('Favoriler'),
         centerTitle: true,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
@@ -88,7 +88,7 @@ class FavouriteScreen extends GetView<ProductController> {
                             ),
                           ),
                           child: const Text(
-                            'Add All To Cart',
+                            'Tümünü sepete ekle',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,

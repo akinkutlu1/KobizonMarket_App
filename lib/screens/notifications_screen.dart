@@ -34,157 +34,161 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           onPressed: () => Get.back(),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Bildirim Ayarları',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Bildirim Ayarları',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
               ),
-            ),
-            
-            const SizedBox(height: 20),
-            
-            // Notification Settings
-            _buildNotificationSetting(
-              title: 'Push Bildirimleri',
-              subtitle: 'Sipariş durumu ve önemli güncellemeler',
-              icon: Icons.notifications,
-              value: _pushNotifications,
-              onChanged: (value) {
-                setState(() {
-                  _pushNotifications = value;
-                });
-              },
-            ),
-            
-            const SizedBox(height: 16),
-            
-            _buildNotificationSetting(
-              title: 'E-posta Bildirimleri',
-              subtitle: 'Sipariş onayları ve faturalar',
-              icon: Icons.email,
-              value: _emailNotifications,
-              onChanged: (value) {
-                setState(() {
-                  _emailNotifications = value;
-                });
-              },
-            ),
-            
-            const SizedBox(height: 16),
-            
-            _buildNotificationSetting(
-              title: 'SMS Bildirimleri',
-              subtitle: 'Teslimat durumu güncellemeleri',
-              icon: Icons.sms,
-              value: _smsNotifications,
-              onChanged: (value) {
-                setState(() {
-                  _smsNotifications = value;
-                });
-              },
-            ),
-            
-            const SizedBox(height: 16),
-            
-            _buildNotificationSetting(
-              title: 'Promosyon Bildirimleri',
-              subtitle: 'İndirimler ve özel teklifler',
-              icon: Icons.local_offer,
-              value: _promoNotifications,
-              onChanged: (value) {
-                setState(() {
-                  _promoNotifications = value;
-                });
-              },
-            ),
-            
-            const Spacer(),
-            
-            // Save Button
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed: () {
-                  Get.snackbar(
-                    'Başarılı',
-                    'Bildirim ayarları kaydedildi',
-                    backgroundColor: const Color(0xFF53B175),
-                    colorText: Colors.white,
-                    duration: const Duration(seconds: 2),
-                  );
-                  Get.back();
+              
+              const SizedBox(height: 20),
+              
+              // Notification Settings
+              _buildNotificationSetting(
+                title: 'Push Bildirimleri',
+                subtitle: 'Sipariş durumu ve önemli güncellemeler',
+                icon: Icons.notifications,
+                value: _pushNotifications,
+                onChanged: (value) {
+                  setState(() {
+                    _pushNotifications = value;
+                  });
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF53B175),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                child: const Text(
-                  'Kaydet',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
               ),
-            ),
-            
-            const SizedBox(height: 20),
-            
-            // Info Section
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFF53B175).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: const Color(0xFF53B175).withOpacity(0.3),
-                ),
+              
+              const SizedBox(height: 16),
+              
+              _buildNotificationSetting(
+                title: 'E-posta Bildirimleri',
+                subtitle: 'Sipariş onayları ve faturalar',
+                icon: Icons.email,
+                value: _emailNotifications,
+                onChanged: (value) {
+                  setState(() {
+                    _emailNotifications = value;
+                  });
+                },
               ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.info_outline,
-                        color: Color(0xFF53B175),
-                        size: 20,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'Bildirim Türleri',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF53B175),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12),
-                  Text(
-                    '• Sipariş durumu güncellemeleri\n• Teslimat bildirimleri\n• Promosyon ve indirimler\n• Önemli güncellemeler',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black87,
-                      height: 1.5,
+              
+              const SizedBox(height: 16),
+              
+              _buildNotificationSetting(
+                title: 'SMS Bildirimleri',
+                subtitle: 'Teslimat durumu güncellemeleri',
+                icon: Icons.sms,
+                value: _smsNotifications,
+                onChanged: (value) {
+                  setState(() {
+                    _smsNotifications = value;
+                  });
+                },
+              ),
+              
+              const SizedBox(height: 16),
+              
+              _buildNotificationSetting(
+                title: 'Promosyon Bildirimleri',
+                subtitle: 'İndirimler ve özel teklifler',
+                icon: Icons.local_offer,
+                value: _promoNotifications,
+                onChanged: (value) {
+                  setState(() {
+                    _promoNotifications = value;
+                  });
+                },
+              ),
+              
+              const SizedBox(height: 32),
+              
+              // Save Button
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.snackbar(
+                      'Başarılı',
+                      'Bildirim ayarları kaydedildi',
+                      backgroundColor: const Color(0xFF53B175),
+                      colorText: Colors.white,
+                      duration: const Duration(seconds: 2),
+                    );
+                    Get.back();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF53B175),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                ],
+                  child: const Text(
+                    'Kaydet',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ],
+              
+              const SizedBox(height: 20),
+              
+              // Info Section
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF53B175).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xFF53B175).withOpacity(0.3),
+                  ),
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          color: Color(0xFF53B175),
+                          size: 20,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'Bildirim Türleri',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF53B175),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                      '• Sipariş durumu güncellemeleri\n• Teslimat bildirimleri\n• Promosyon ve indirimler\n• Önemli güncellemeler',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black87,
+                        height: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
