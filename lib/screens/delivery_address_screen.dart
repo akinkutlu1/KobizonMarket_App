@@ -155,7 +155,7 @@ class DeliveryAddressScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 12),
                   Text(
-                    '• Teslimat süresi: 30-60 dakika\n• Minimum sipariş tutarı: ₺50\n• Ücretsiz teslimat: ₺100 üzeri\n• Teslimat ücreti: ₺10',
+                    '• Teslimat süresi: 30-60 dakika\n• Minimum sipariş tutarı: ₺50\n• Ücretsiz teslimat: ₺160 üzeri\n• Normal teslimat ücreti: ₺15',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.black87,
@@ -188,7 +188,7 @@ class DeliveryAddressScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Şu anda sadece İstanbul\'da hizmet veriyoruz. Yakında diğer şehirlerde de olacağız!',
+                    'Şu anda sadece İstanbul, Ankara, İzmir ve Zonguldak\'ta hizmet veriyoruz. Yakında diğer şehirlerde de olacağız!',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey,

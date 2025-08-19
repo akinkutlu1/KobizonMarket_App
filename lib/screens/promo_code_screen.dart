@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/cart_controller.dart';
 
 class PromoCodeScreen extends StatefulWidget {
   const PromoCodeScreen({super.key});
@@ -10,7 +11,7 @@ class PromoCodeScreen extends StatefulWidget {
 
 class _PromoCodeScreenState extends State<PromoCodeScreen> {
   final TextEditingController _promoController = TextEditingController();
-  final List<String> _usedCodes = [];
+  final CartController _cartController = Get.find<CartController>();
   bool _isLoading = false;
 
   @override
@@ -116,6 +117,109 @@ class _PromoCodeScreenState extends State<PromoCodeScreen> {
             
             const SizedBox(height: 24),
             
+            // Sepet Bilgileri
+            Obx(() {
+              if (_cartController.items.isNotEmpty) {
+                return Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.blue.withOpacity(0.3)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.shopping_cart, color: Colors.blue[700]),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Sepet Bilgileri',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue[700],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Sepet Toplamı:', style: TextStyle(fontSize: 16)),
+                          Text(
+                            '${_cartController.totalAmount.toStringAsFixed(2)} TL',
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Kargo Ücreti:', style: TextStyle(fontSize: 16)),
+                          Text(
+                            '${_cartController.shippingCost.toStringAsFixed(2)} TL',
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Toplam Tutar:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text(
+                            '${_cartController.totalAmountWithShipping.toStringAsFixed(2)} TL',
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
+                          ),
+                        ],
+                      ),
+                      if (_cartController.isPromoCodeValid) ...[
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'İndirim (${_cartController.appliedPromoCode}):',
+                              style: TextStyle(fontSize: 16, color: Colors.green[700]),
+                            ),
+                            Text(
+                              '-${_cartController.discountAmount.toStringAsFixed(2)} TL',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green[700]),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Ödenecek Tutar:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            Text(
+                              '${_cartController.finalTotalAmount.toStringAsFixed(2)} TL',
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF53B175)),
+                            ),
+                          ],
+                        ),
+                      ],
+                      if (_cartController.totalAmountWithShipping < 100.0 && _cartController.totalAmountWithShipping > 0) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          'KOBIZON100 kodu için minimum ${(100.0 - _cartController.totalAmountWithShipping).toStringAsFixed(2)} TL daha ürün ekleyin',
+                          style: TextStyle(fontSize: 14, color: Colors.orange[700]),
+                        ),
+                      ],
+                    ],
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
+            
+            const SizedBox(height: 24),
+            
             // Special Offer Banner
             Container(
               width: double.infinity,
@@ -151,7 +255,7 @@ class _PromoCodeScreenState extends State<PromoCodeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Yeni Üye Özel',
+                              'Özel İndirim',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -159,7 +263,7 @@ class _PromoCodeScreenState extends State<PromoCodeScreen> {
                               ),
                             ),
                             Text(
-                              '100 TL Hediye',
+                              '100 TL İndirim',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -190,7 +294,7 @@ class _PromoCodeScreenState extends State<PromoCodeScreen> {
                           ),
                         ),
                         Text(
-                          'HOŞGELDİN100',
+                          'KOBIZON100',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -203,10 +307,18 @@ class _PromoCodeScreenState extends State<PromoCodeScreen> {
                   ),
                   const SizedBox(height: 12),
                   const Text(
-                    'İlk siparişinizde 100 TL indirim!',
+                    '100 TL ve üzeri siparişlerde 100 TL indirim!',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Her hesapta sadece bir kez kullanılabilir',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white70,
                     ),
                   ),
                 ],
@@ -215,52 +327,97 @@ class _PromoCodeScreenState extends State<PromoCodeScreen> {
             
             const SizedBox(height: 24),
             
-            // Used Codes
-            if (_usedCodes.isNotEmpty) ...[
-              const Text(
-                'Kullandığınız Kodlar',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 12),
-              ..._usedCodes.map((code) => Container(
-                margin: const EdgeInsets.only(bottom: 8),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.check_circle,
-                      color: Color(0xFF53B175),
-                      size: 20,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      code,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+            // Applied Promo Code
+            Obx(() {
+              if (_cartController.isPromoCodeValid) {
+                return Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.green.withOpacity(0.3)),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.green[700], size: 24),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Uygulanan Kod: ${_cartController.appliedPromoCode}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green[700],
+                              ),
+                            ),
+                            Text(
+                              'İndirim: -${_cartController.finalTotalAmount.toStringAsFixed(2)} TL',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.green[600],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                    const Text(
-                      'Kullanıldı',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
+                      TextButton(
+                        onPressed: () {
+                          _cartController.removePromoCode();
+                          Get.snackbar(
+                            'Bilgi',
+                            'Promosyon kodu kaldırıldı',
+                            backgroundColor: Colors.blue,
+                            colorText: Colors.white,
+                          );
+                        },
+                        child: const Text('Kaldır'),
                       ),
-                    ),
-                  ],
-                ),
-              )),
-            ],
+                    ],
+                  ),
+                );
+              } else if (_cartController.appliedPromoCode == 'USED') {
+                return Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline, color: Colors.orange[700], size: 24),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'KOBIZON100 Kodu Kullanıldı',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange[700],
+                              ),
+                            ),
+                            Text(
+                              'Bu kodu daha önce kullandınız. Her hesapta sadece bir kez kullanılabilir.',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.orange[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
             
             const SizedBox(height: 24),
             
@@ -284,7 +441,7 @@ class _PromoCodeScreenState extends State<PromoCodeScreen> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    '• Promosyon kodları sadece bir kez kullanılabilir\n• Minimum sipariş tutarı geçerlidir\n• Kodlar birleştirilemez\n• Geçerlilik süresi dolmuş kodlar kullanılamaz',
+                    '• KOBIZON100 kodu her hesapta sadece bir kez kullanılabilir\n• Minimum sipariş tutarı 100 TL\'dir\n• İndirim tutarı 100 TL\'dir\n• Kodlar birleştirilemez\n• Geçerlilik süresi dolmuş kodlar kullanılamaz',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
@@ -300,8 +457,8 @@ class _PromoCodeScreenState extends State<PromoCodeScreen> {
     );
   }
 
-  void _applyPromoCode() {
-    final code = _promoController.text.trim().toUpperCase();
+  void _applyPromoCode() async {
+    final code = _promoController.text.trim();
     
     if (code.isEmpty) {
       Get.snackbar(
@@ -317,42 +474,56 @@ class _PromoCodeScreenState extends State<PromoCodeScreen> {
       _isLoading = true;
     });
 
-    // Simulate API call
-    Future.delayed(const Duration(seconds: 1), () {
+    try {
+      final success = await _cartController.applyPromoCode(code);
+      
+      if (success) {
+        _promoController.clear();
+        Get.snackbar(
+          'Başarılı!',
+          'KOBIZON100 kodu uygulandı. 100 TL indirim kazandınız!',
+          backgroundColor: const Color(0xFF53B175),
+          colorText: Colors.white,
+          duration: const Duration(seconds: 4),
+        );
+      } else {
+        if (code.toUpperCase() == 'KOBIZON100') {
+          if (_cartController.totalAmountWithShipping < 100.0) {
+            Get.snackbar(
+              'Hata',
+              'KOBIZON100 kodu için minimum 100 TL sipariş tutarı gerekli (kargo dahil)',
+              backgroundColor: Colors.orange,
+              colorText: Colors.white,
+            );
+          } else {
+            Get.snackbar(
+              'Hata',
+              'Bu kodu zaten kullandınız',
+              backgroundColor: Colors.orange,
+              colorText: Colors.white,
+            );
+          }
+        } else {
+          Get.snackbar(
+            'Hata',
+            'Geçersiz promosyon kodu',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Hata',
+        'Kod uygulanırken bir hata oluştu: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
       setState(() {
         _isLoading = false;
       });
-
-      if (code == 'HOŞGELDİN100') {
-        if (_usedCodes.contains(code)) {
-          Get.snackbar(
-            'Hata',
-            'Bu kodu zaten kullandınız',
-            backgroundColor: Colors.orange,
-            colorText: Colors.white,
-          );
-        } else {
-          setState(() {
-            _usedCodes.add(code);
-          });
-          _promoController.clear();
-          Get.snackbar(
-            'Başarılı!',
-            '100 TL indirim uygulandı',
-            backgroundColor: const Color(0xFF53B175),
-            colorText: Colors.white,
-            duration: const Duration(seconds: 3),
-          );
-        }
-      } else {
-        Get.snackbar(
-          'Hata',
-          'Geçersiz promosyon kodu',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-      }
-    });
+    }
   }
 
   @override

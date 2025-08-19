@@ -7,6 +7,7 @@ import 'categories_screen.dart';
 import 'favourite_screen.dart';
 import 'cart_screen.dart';
 import 'profile_screen.dart';
+import 'orders_screen.dart';
 
 class OrderSuccessScreen extends StatelessWidget {
   const OrderSuccessScreen({super.key});
@@ -69,14 +70,8 @@ class OrderSuccessScreen extends StatelessWidget {
                 height: 56,
                 child: ElevatedButton(
                   onPressed: () {
-                    // TODO: Implement order tracking
-                    Get.snackbar(
-                      'Sipariş Takibi',
-                      'Sipariş takip özelliği yakında eklenecek',
-                      backgroundColor: const Color(0xFF53B175),
-                      colorText: Colors.white,
-                      duration: const Duration(seconds: 1),
-                    );
+                    // Siparişler ekranına git
+                    Get.offAll(() => const OrdersScreen());
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF53B175),
@@ -100,8 +95,8 @@ class OrderSuccessScreen extends StatelessWidget {
               // Back to Home Button
               GestureDetector(
                 onTap: () {
-                  // Clear cart and go to home
-                  cartController.clear();
+                  // Clear cart and promo code, then go to home
+                  cartController.clearAfterOrder();
                   Get.find<NavigationController>().changePage(0);
                   Get.offAll(() => const HomeScreen());
                 },

@@ -124,13 +124,118 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 const SizedBox(height: 16),
                 
                 // Total Cost
-                _buildCheckoutRow(
-                  title: 'Toplam Tutar',
-                  subtitle: '₺${cartController.totalAmount.toStringAsFixed(2)}',
-                  onTap: () {
-                    // TODO: Show detailed breakdown
-                  },
-                ),
+                Obx(() {
+                  if (cartController.isPromoCodeValid) {
+                    return Column(
+                      children: [
+                        _buildCheckoutRow(
+                          title: 'Sepet Toplamı',
+                          subtitle: '₺${cartController.totalAmount.toStringAsFixed(2)}',
+                          onTap: () {
+                            // TODO: Show detailed breakdown
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        _buildCheckoutRow(
+                          title: 'Kargo Ücreti',
+                          subtitle: '₺${cartController.shippingCost.toStringAsFixed(2)}',
+                          onTap: () {
+                            // TODO: Show shipping details
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        _buildCheckoutRow(
+                          title: 'İndirim (${cartController.appliedPromoCode})',
+                          subtitle: '-₺${cartController.discountAmount.toStringAsFixed(2)}',
+                          onTap: () {
+                            // TODO: Show promo code details
+                          },
+                          subtitleColor: Colors.green,
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF53B175).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: const Color(0xFF53B175).withOpacity(0.3)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Ödenecek Tutar:',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF53B175),
+                                ),
+                              ),
+                              Text(
+                                '₺${cartController.finalTotalAmount.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF53B175),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      children: [
+                        _buildCheckoutRow(
+                          title: 'Sepet Toplamı',
+                          subtitle: '₺${cartController.totalAmount.toStringAsFixed(2)}',
+                          onTap: () {
+                            // TODO: Show detailed breakdown
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        _buildCheckoutRow(
+                          title: 'Kargo Ücreti',
+                          subtitle: '₺${cartController.shippingCost.toStringAsFixed(2)}',
+                          onTap: () {
+                            // TODO: Show shipping details
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF53B175).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: const Color(0xFF53B175).withOpacity(0.3)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Toplam Tutar:',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF53B175),
+                                ),
+                              ),
+                              Text(
+                                '₺${cartController.totalAmountWithShipping.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF53B175),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                }),
                 
                 const SizedBox(height: 16),
                 
@@ -175,13 +280,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         // Sipariş oluştur
                         await orderController.createOrder(
                           items: cartController.items.values.toList(),
-                          totalAmount: cartController.totalAmount,
+                          totalAmount: cartController.totalAmountWithShipping,
                           deliveryAddress: 'Teslimat Adresi', // TODO: Gerçek adres al
                           paymentMethod: 'Kredi Kartı',
                         );
                         
-                        // Sepeti temizle
-                        cartController.clear();
+                        // Sepeti ve promosyon kodunu temizle
+                        cartController.clearAfterOrder();
                         
                         // Başarı ekranına git
                         Get.back();
@@ -228,6 +333,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     required String subtitle,
     required VoidCallback onTap,
     Widget? trailing,
+    Color? subtitleColor,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -259,9 +365,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey,
+                        color: subtitleColor ?? Colors.grey,
                       ),
                     ),
                   ],

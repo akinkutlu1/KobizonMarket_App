@@ -313,11 +313,100 @@ class CartScreen extends GetView<CartController> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Sepet Toplamı
             Obx(() => Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Toplam:',
+                  'Sepet Toplamı:',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
+                  ),
+                ),
+                Text(
+                  '₺${controller.totalAmount.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            )),
+            
+            // Kargo Ücreti
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Kargo Ücreti:',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
+                  ),
+                ),
+                Text(
+                  '₺${controller.shippingCost.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+            
+            // Promosyon Kodu İndirimi
+            Obx(() {
+              if (controller.isPromoCodeValid) {
+                return Column(
+                  children: [
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'İndirim (${controller.appliedPromoCode}):',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.green[700],
+                          ),
+                        ),
+                        Text(
+                          '-₺${controller.discountAmount.toStringAsFixed(2)}',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.green[700],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      width: double.infinity,
+                      height: 1,
+                      color: Colors.grey.withOpacity(0.3),
+                    ),
+                  ],
+                );
+              }
+              return const SizedBox.shrink();
+            }),
+            
+            const SizedBox(height: 12),
+            
+            // Ödenecek Tutar
+            Obx(() => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Ödenecek Tutar:',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -325,7 +414,7 @@ class CartScreen extends GetView<CartController> {
                   ),
                 ),
                 Text(
-                  '₺${controller.totalAmount.toStringAsFixed(2)}',
+                  '₺${controller.finalTotalAmount.toStringAsFixed(2)}',
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -334,7 +423,45 @@ class CartScreen extends GetView<CartController> {
                 ),
               ],
             )),
+            
+            // Promosyon Kodu Ekleme Butonu
+            Obx(() {
+              if (!controller.isPromoCodeValid) {
+                return Column(
+                  children: [
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          Get.toNamed('/promo-code');
+                        },
+                        icon: const Icon(Icons.local_offer, color: Color(0xFF53B175)),
+                        label: const Text(
+                          'Promosyon Kodu Ekle',
+                          style: TextStyle(
+                            color: Color(0xFF53B175),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Color(0xFF53B175)),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
+              return const SizedBox.shrink();
+            }),
+            
             const SizedBox(height: 16),
+            
+            // Ödeme Butonu
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
