@@ -62,15 +62,7 @@ class WelcomeScreen extends StatelessWidget {
                   
                   const SizedBox(height: 4),
                   
-                  const Text(
-                    'mağazamıza',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                  
                   
                   const SizedBox(height: 12),
                   
@@ -103,7 +95,7 @@ class WelcomeScreen extends StatelessWidget {
                         ),
                       ),
                       child: const Text(
-                        'Başlayalım',
+                        'Devam et',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

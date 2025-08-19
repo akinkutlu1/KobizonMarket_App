@@ -37,7 +37,7 @@ class SignInScreen extends StatelessWidget {
                  children: [
                   // Main Title - Left aligned
                   const Text(
-                    'KOBİZON ile market\nalışverişinizi yapın',
+                    'Kobizon market ile \nalışverişe başlayın!',
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,

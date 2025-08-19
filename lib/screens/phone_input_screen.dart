@@ -116,7 +116,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Telefon numaranızı girin',
+                  'Telefon numaranızı giriniz',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,

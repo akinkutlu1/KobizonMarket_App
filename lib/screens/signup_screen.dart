@@ -73,7 +73,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
               // Title
               const Text(
-                'Kayıt Ol',
+                'Kaydol',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -369,7 +369,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         )
                       : const Text(
-                          'Kayıt Ol',
+                          'Kaydol',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,

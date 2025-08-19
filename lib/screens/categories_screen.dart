@@ -25,7 +25,7 @@ class CategoriesScreen extends GetView<ProductController> {
             children: [
               // Header
               const Text(
-                'Ürün Bul',
+                'Kategoriler',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -53,7 +53,7 @@ class CategoriesScreen extends GetView<ProductController> {
                     Expanded(
                       child: TextField(
                         decoration: const InputDecoration(
-                          hintText: 'Mağaza Ara',
+                          hintText: 'Mağazada Ara',
                           border: InputBorder.none,
                           hintStyle: TextStyle(
                             fontSize: 16,
@@ -82,13 +82,13 @@ class CategoriesScreen extends GetView<ProductController> {
                   childAspectRatio: 1.1,
                   children: [
                     _buildCategoryCard(
-                      title: 'Taze Meyve & Sebze',
+                      title: 'Meyve sebzeler',
                       imagePath: 'assets/images/pngfuel6.png',
                       backgroundColor: const Color(0xFFF0F8F0),
                       onTap: () => _navigateToCategory(0, 'Taze Meyve & Sebze'), // 0 = Tüm meyve ve sebzeler
                     ),
                     _buildCategoryCard(
-                      title: 'Yemeklik Yağ & Sade Yağ',
+                      title: 'Yağlar',
                       imagePath: 'assets/images/pngfuel8.png',
                       backgroundColor: const Color(0xFFFFF8F0),
                       onTap: () => _navigateToCategory(7, 'Yemeklik Yağ & Sade Yağ'),
@@ -100,13 +100,13 @@ class CategoriesScreen extends GetView<ProductController> {
                       onTap: () => _navigateToCategory(4, 'Et & Balık'),
                     ),
                     _buildCategoryCard(
-                      title: 'Fırın & Atıştırmalıklar',
+                      title: 'Unlu Mamüller',
                       imagePath: 'assets/images/pngfuel7.png',
                       backgroundColor: const Color(0xFFF8F0FF),
                       onTap: () => _navigateToCategory(5, 'Fırın & Atıştırmalıklar'),
                     ),
                     _buildCategoryCard(
-                      title: 'Süt Ürünleri & Yumurta',
+                      title: 'Süt Ürünleri',
                       imagePath: 'assets/images/pngfuel5.png',
                       backgroundColor: const Color(0xFFFFFEE0),
                       onTap: () => _navigateToCategory(3, 'Süt Ürünleri & Yumurta'),
