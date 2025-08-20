@@ -1,6 +1,6 @@
 {
-    "name": "market_app0",
-    "short_name": "market_app0",
+    "name": "KobizonMarket",
+    "short_name": "KobizonMarket",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
