@@ -67,7 +67,38 @@ class FavouriteScreen extends GetView<ProductController> {
                         separatorBuilder: (context, index) => const Divider(height: 1),
                         itemBuilder: (context, index) {
                           final product = controller.favouriteProducts[index];
-                          return _buildFavouriteItem(product);
+                          return Dismissible(
+                            key: ValueKey(product.id),
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              color: Colors.red.withOpacity(0.1),
+                            ),
+                            secondaryBackground: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              alignment: Alignment.centerRight,
+                              color: Colors.red,
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Icon(Icons.delete, color: Colors.white),
+                                  SizedBox(width: 8),
+                                  Text('Kaldır', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                                ],
+                              ),
+                            ),
+                            onDismissed: (_) {
+                              controller.toggleFavorite(product.id);
+                              Get.snackbar(
+                                'Kaldırıldı',
+                                '${product.name} favorilerden kaldırıldı',
+                                snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: const Color(0xFF53B175),
+                                colorText: Colors.white,
+                                duration: const Duration(seconds: 1),
+                              );
+                            },
+                            child: _buildFavouriteItem(product),
+                          );
                         },
                       ),
                     ),

@@ -34,290 +34,297 @@ class HomeScreen extends GetView<ProductController> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header with Logo, Location and Chatbot
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Left side - Logo and Location
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Logo
-                        Row(
-                          children: [
-                            const SizedBox(width: 23),
-                            Image.asset(
-                              'assets/images/havuc.png',
-                              width: 40,
-                              height: 40,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 2),
-                        // Location
-                        GestureDetector(
-                          onTap: () {
-                            Get.to(() => const LocationScreen());
-                          },
-                          child: Row(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            controller.loadProducts();
+            await controller.loadMostClickedProducts();
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header with Logo, Location and Chatbot
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Left side - Logo and Location
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Logo
+                          Row(
                             children: [
-                              const Icon(
-                                Icons.location_on,
-                                color: Colors.black87,
-                                size: 20,
+                              const SizedBox(width: 23),
+                              Image.asset(
+                                'assets/images/havuc.png',
+                                width: 40,
+                                height: 40,
                               ),
-                              const SizedBox(width: 8),
-                              Obx(() => Text(
-                                Get.find<LocationController>().currentLocation.value,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black87,
-                                ),
-                              )),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                    // Right side - Chatbot
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(() => const ChatbotScreen());
-                      },
-                      child: Image.asset(
-                        'assets/images/chatbot.png',
-                        width: 50,
-                        height: 50,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                // Search Bar
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: const Color(0xFF4ECDC4),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.search,
-                        color: Colors.grey,
-                        size: 24,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: TextField(
-                          decoration: const InputDecoration(
-                            hintText: 'Mağazada ara',
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
+                          const SizedBox(height: 2),
+                          // Location
+                          GestureDetector(
+                            onTap: () {
+                              Get.to(() => const LocationScreen());
+                            },
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.location_on,
+                                  color: Colors.black87,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Obx(() => Text(
+                                  Get.find<LocationController>().currentLocation.value,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
+                                  ),
+                                )),
+                              ],
                             ),
                           ),
-                          onSubmitted: (value) {
-                            if (value.trim().isNotEmpty) {
-                              Get.to(() => SearchScreen(searchQuery: value.trim()));
-                            }
-                          },
+                        ],
+                      ),
+                      // Right side - Chatbot
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => const ChatbotScreen());
+                        },
+                        child: Image.asset(
+                          'assets/images/chatbot.png',
+                          width: 50,
+                          height: 50,
                         ),
                       ),
                     ],
                   ),
-                ),
 
-                const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                // Fresh Vegetables Banner with PageView
-                Container(
-                  width: double.infinity,
-                  height: 115,
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: 3,
-                    onPageChanged: (index) {
-                      _currentPage.value = index;
-                    },
-                    itemBuilder: (context, index) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.grey.shade300, width: 1),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [Color(0xFF53B175), Colors.white],
+                  // Search Bar
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: const Color(0xFF4ECDC4),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.search,
+                          color: Colors.grey,
+                          size: 24,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: TextField(
+                            decoration: const InputDecoration(
+                              hintText: 'Mağazada ara',
+                              border: InputBorder.none,
+                              hintStyle: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            onSubmitted: (value) {
+                              if (value.trim().isNotEmpty) {
+                                Get.to(() => SearchScreen(searchQuery: value.trim()));
+                              }
+                            },
                           ),
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            'assets/images/${index + 1}.png',
-                            fit: BoxFit.cover,
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Fresh Vegetables Banner with PageView
+                  Container(
+                    width: double.infinity,
+                    height: 115,
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: 3,
+                      onPageChanged: (index) {
+                        _currentPage.value = index;
+                      },
+                      itemBuilder: (context, index) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey.shade300, width: 1),
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [Color(0xFF53B175), Colors.white],
+                            ),
                           ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset(
+                              'assets/images/${index + 1}.png',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  // Page Indicators (Banner'ın altında)
+                  Obx(() => Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(3, (index) => Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: index == _currentPage.value ? const Color(0xFF53B175) : Colors.grey.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      )),
+                    ),
+                  )),
+
+                  const SizedBox(height: 24),
+
+                  // En Çok Görüntülenenler
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'En Çok Görüntülenenler',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Get.to(() => const MostViewedScreen());
+                        },
+                        child: const Text(
+                          'Tümünü Gör',
+                          style: TextStyle(
+                            color: Color(0xFF53B175),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  Obx(() {
+                    final mostClickedProducts = controller.mostClickedProducts;
+                    if (mostClickedProducts.isEmpty) {
+                      return const SizedBox(
+                        height: 170,
+                        child: Center(
+                          child: CircularProgressIndicator(),
                         ),
                       );
-                    },
-                  ),
-                ),
-
-                // Page Indicators (Banner'ın altında)
-                Obx(() => Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(3, (index) => Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: index == _currentPage.value ? const Color(0xFF53B175) : Colors.grey.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    )),
-                  ),
-                )),
-
-                const SizedBox(height: 24),
-
-                // En Çok Görüntülenenler
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'En Çok Görüntülenenler',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Get.to(() => const MostViewedScreen());
-                      },
-                      child: const Text(
-                        'Tümünü Gör',
-                        style: TextStyle(
-                          color: Color(0xFF53B175),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                Obx(() {
-                  final mostClickedProducts = controller.mostClickedProducts;
-                  if (mostClickedProducts.isEmpty) {
-                    return const SizedBox(
+                    }
+                    
+                    return SizedBox(
                       height: 170,
-                      child: Center(
-                        child: CircularProgressIndicator(),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: mostClickedProducts.length,
+                        itemBuilder: (context, index) {
+                          final product = mostClickedProducts[index];
+                          return Padding(
+                            padding: EdgeInsets.only(right: index < mostClickedProducts.length - 1 ? 16 : 0),
+                            child: _buildProductCard(product),
+                          );
+                        },
                       ),
                     );
-                  }
-                  
-                  return SizedBox(
-                    height: 170,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: mostClickedProducts.length,
-                      itemBuilder: (context, index) {
-                        final product = mostClickedProducts[index];
-                        return Padding(
-                          padding: EdgeInsets.only(right: index < mostClickedProducts.length - 1 ? 16 : 0),
-                          child: _buildProductCard(product),
-                        );
-                      },
-                    ),
-                  );
-                }),
+                  }),
 
-                const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
-                // Öne Çıkan Ürünler
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Öne Çıkan Ürünler',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Get.to(() => const FeaturedProductsScreen());
-                      },
-                      child: const Text(
-                        'Tümünü Gör',
+                  // Öne Çıkan Ürünler
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Öne Çıkan Ürünler',
                         style: TextStyle(
-                          color: Color(0xFF53B175),
-                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                      TextButton(
+                        onPressed: () {
+                          Get.to(() => const FeaturedProductsScreen());
+                        },
+                        child: const Text(
+                          'Tümünü Gör',
+                          style: TextStyle(
+                            color: Color(0xFF53B175),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
 
-                const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-                // Öne Çıkan Ürünler
-                Obx(() {
-                  final products = controller.products;
-                  final featuredProducts = products.where((p) => p.rating >= 4.5).toList();
-                  
-                  // Random olarak 6 ürün seç
-                  featuredProducts.shuffle();
-                  final randomFeaturedProducts = featuredProducts.take(6).toList();
-                  
-                  if (randomFeaturedProducts.isEmpty) {
-                    return const SizedBox(
+                  // Öne Çıkan Ürünler
+                  Obx(() {
+                    final products = controller.products;
+                    final featuredProducts = products.where((p) => p.rating >= 4.5).toList();
+                    
+                    // Random olarak 6 ürün seç
+                    featuredProducts.shuffle();
+                    final randomFeaturedProducts = featuredProducts.take(6).toList();
+                    
+                    if (randomFeaturedProducts.isEmpty) {
+                      return const SizedBox(
+                        height: 170,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                    
+                    return SizedBox(
                       height: 170,
-                      child: Center(
-                        child: CircularProgressIndicator(),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: randomFeaturedProducts.length,
+                        itemBuilder: (context, index) {
+                          final product = randomFeaturedProducts[index];
+                          return Padding(
+                            padding: EdgeInsets.only(right: index < randomFeaturedProducts.length - 1 ? 16 : 0),
+                            child: _buildProductCard(product),
+                          );
+                        },
                       ),
                     );
-                  }
-                  
-                  return SizedBox(
-                    height: 170,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: randomFeaturedProducts.length,
-                      itemBuilder: (context, index) {
-                        final product = randomFeaturedProducts[index];
-                        return Padding(
-                          padding: EdgeInsets.only(right: index < randomFeaturedProducts.length - 1 ? 16 : 0),
-                          child: _buildProductCard(product),
-                        );
-                      },
-                    ),
-                  );
-                }),
-              ],
+                  }),
+                ],
+              ),
             ),
           ),
         ),
