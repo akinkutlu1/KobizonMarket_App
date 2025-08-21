@@ -232,6 +232,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           focusNode: _focusNodes[index],
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
+                          readOnly: true,
+                          enableInteractiveSelection: false,
                           maxLength: 1,
                           style: const TextStyle(
                             fontSize: 20,

@@ -9,27 +9,51 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/welcome.png'),
-            fit: BoxFit.cover,
-            // scale kaldırıldı - varsayılan yakınlaştırma
-          ),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.transparent,
-                Colors.black.withOpacity(0.3),
-                Colors.black.withOpacity(0.7),
-              ],
+      body: Stack(
+        children: [
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/welcome.png',
+              fit: BoxFit.cover,
             ),
           ),
-          child: SafeArea(
+
+          // Vertical gradient overlay (top -> bottom)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.3),
+                    Colors.black.withOpacity(0.7),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Right edge gradient overlay (right -> left) to mask any light strip
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerRight,
+                  end: Alignment.centerLeft,
+                  colors: [
+                    Colors.black.withOpacity(0.2),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Content
+          SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(24.0),
               child: Column(
@@ -110,7 +134,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

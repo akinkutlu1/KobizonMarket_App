@@ -161,11 +161,13 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                       const SizedBox(width: 8),
                       
                                              // Phone Number Input
-                       Expanded(
-                         child: TextField(
-                           controller: _phoneTextController,
+                      Expanded(
+                        child: TextField(
+                          controller: _phoneTextController,
                           keyboardType: TextInputType.phone,
-                          autofocus: true,
+                          autofocus: false,
+                          readOnly: true,
+                          enableInteractiveSelection: false,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,

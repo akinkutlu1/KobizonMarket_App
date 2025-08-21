@@ -138,88 +138,112 @@ class SignInScreen extends StatelessWidget {
                   const SizedBox(height: 24),
                   
                   // Google Button
-                  Container(
-                    width: double.infinity,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF4285F4),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 24,
-                          height: 24,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Center(
-                            child: Text(
-                              'G',
-                              style: TextStyle(
-                                color: Color(0xFF4285F4),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                  GestureDetector(
+                    onTap: () {
+                      Get.snackbar(
+                        'Yakında',
+                        'Bu özellik yakında eklenecek',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.black87,
+                        colorText: Colors.white,
+                        duration: const Duration(seconds: 2),
+                      );
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF4285F4),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 24,
+                            height: 24,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'G',
+                                style: TextStyle(
+                                  color: Color(0xFF4285F4),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        const Text(
-                          'Google ile devam et',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                          const SizedBox(width: 12),
+                          const Text(
+                            'Google ile devam et',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   
                   const SizedBox(height: 16),
                   
                   // Facebook Button
-                  Container(
-                    width: double.infinity,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1877F2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 24,
-                          height: 24,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Center(
-                            child: Text(
-                              'f',
-                              style: TextStyle(
-                                color: Color(0xFF1877F2),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                  GestureDetector(
+                    onTap: () {
+                      Get.snackbar(
+                        'Yakında',
+                        'Bu özellik yakında eklenecek',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.black87,
+                        colorText: Colors.white,
+                        duration: const Duration(seconds: 2),
+                      );
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1877F2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 24,
+                            height: 24,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'f',
+                                style: TextStyle(
+                                  color: Color(0xFF1877F2),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        const Text(
-                          'Facebook ile devam et',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                          const SizedBox(width: 12),
+                          const Text(
+                            'Facebook ile devam et',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   
