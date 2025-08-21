@@ -27,6 +27,22 @@ class _SearchScreenState extends State<SearchScreen> {
   List<String> selectedCategories = [];
   List<String> selectedBrands = [];
 
+  late final TextEditingController _searchController;
+  final FocusNode _searchFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController(text: widget.searchQuery);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,26 +81,33 @@ class _SearchScreenState extends State<SearchScreen> {
                           size: 24,
                         ),
                         const SizedBox(width: 12),
-                                                 Expanded(
-                           child: Text(
-                             widget.searchQuery,
-                             style: const TextStyle(
-                               fontSize: 16,
-                               color: Colors.black87,
-                             ),
-                           ),
-                         ),
-                        GestureDetector(
-                          onTap: () {
-                            // Clear search and go back
-                            Get.back();
-                          },
-                          child: const Icon(
-                            Icons.close,
-                            color: Colors.grey,
-                            size: 20,
+                        Expanded(
+                          child: TextField(
+                            controller: _searchController,
+                            focusNode: _searchFocusNode,
+                            textInputAction: TextInputAction.search,
+                            onChanged: (_) => setState(() {}),
+                            onSubmitted: (_) => setState(() {}),
+                            decoration: const InputDecoration(
+                              hintText: 'Ürün ara',
+                              border: InputBorder.none,
+                              isDense: true,
+                            ),
                           ),
                         ),
+                        if (_searchController.text.isNotEmpty)
+                          GestureDetector(
+                            onTap: () {
+                              _searchController.clear();
+                              setState(() {});
+                              _searchFocusNode.requestFocus();
+                            },
+                            child: const Icon(
+                              Icons.close,
+                              color: Colors.grey,
+                              size: 20,
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -94,7 +117,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 GestureDetector(
                   onTap: () async {
                     final result = await Get.to(() => FilterScreen(
-                      searchQuery: widget.searchQuery,
+                      searchQuery: _searchController.text,
                       initialCategories: selectedCategories,
                       initialBrands: selectedBrands,
                     ));
@@ -129,8 +152,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 final productController = Get.find<ProductController>();
                 final products = selectedCategories.isNotEmpty || selectedBrands.isNotEmpty
                     ? productController.searchProductsWithFilters(
-                        widget.searchQuery, selectedCategories, selectedBrands)
-                    : productController.searchProducts(widget.searchQuery);
+                        _searchController.text, selectedCategories, selectedBrands)
+                    : productController.searchProducts(_searchController.text);
                 
                 if (products.isEmpty) {
                   return const Center(
