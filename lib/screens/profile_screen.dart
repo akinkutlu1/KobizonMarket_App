@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/navigation_controller.dart';
+import '../controllers/cart_controller.dart';
 import '../services/auth_service.dart';
 import 'home_screen.dart';
 import 'categories_screen.dart';
@@ -219,6 +220,8 @@ class ProfileScreen extends GetView<AuthService> {
       ),
       bottomNavigationBar: Obx(() {
         final navigationController = Get.find<NavigationController>();
+        final cartController = Get.find<CartController>();
+        final cartCount = cartController.itemCount;
         return BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: navigationController.currentIndex,
@@ -244,24 +247,24 @@ class ProfileScreen extends GetView<AuthService> {
           },
           selectedItemColor: const Color(0xFF53B175),
           unselectedItemColor: Colors.grey,
-          items: const [
-            BottomNavigationBarItem(
+          items: [
+            const BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Ana Sayfa',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.explore),
               label: 'Keşfet',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.favorite),
               label: 'Favoriler',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart),
+              icon: _buildCartIconWithBadge(cartCount),
               label: 'Sepet',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: 'Hesap',
             ),
@@ -362,3 +365,35 @@ class ProfileScreen extends GetView<AuthService> {
     );
   }
 } 
+
+Widget _buildCartIconWithBadge(int count) {
+  return Stack(
+    clipBehavior: Clip.none,
+    children: [
+      const Icon(Icons.shopping_cart),
+      if (count > 0)
+        Positioned(
+          right: -6,
+          top: -4,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.white, width: 1),
+            ),
+            constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+            child: Text(
+              '$count',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+    ],
+  );
+}

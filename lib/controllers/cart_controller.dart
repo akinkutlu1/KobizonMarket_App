@@ -23,6 +23,15 @@ class CartController extends GetxController {
 
   int get itemCount => _items.length;
 
+  // Sepetteki toplam adet (ürün miktarlarının toplamı)
+  int get totalItemQuantity {
+    int totalQuantity = 0;
+    _items.forEach((key, cartItem) {
+      totalQuantity += cartItem.quantity;
+    });
+    return totalQuantity;
+  }
+
   double get totalAmount {
     double total = 0.0;
     _items.forEach((key, cartItem) {
