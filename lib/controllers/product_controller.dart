@@ -213,27 +213,69 @@ class ProductController extends GetxController {
   }
 
   List<Product> searchProductsWithFilters(String query, List<String> categories, List<String> brands) {
-    if (query.isEmpty) return [];
-    
-    List<Product> filteredProducts = SampleData.products.where((product) =>
-      product.name.toLowerCase().contains(query.toLowerCase()) ||
-      product.description.toLowerCase().contains(query.toLowerCase()) ||
-      product.category.toLowerCase().contains(query.toLowerCase())
-    ).toList();
+    List<Product> filteredProducts;
+    if (query.isEmpty) {
+      filteredProducts = List<Product>.from(SampleData.products);
+    } else {
+      filteredProducts = SampleData.products.where((product) =>
+        product.name.toLowerCase().contains(query.toLowerCase()) ||
+        product.description.toLowerCase().contains(query.toLowerCase()) ||
+        product.category.toLowerCase().contains(query.toLowerCase())
+      ).toList();
+    }
 
     // Kategori filtresi
     if (categories.isNotEmpty) {
-      filteredProducts = filteredProducts.where((product) {
-        return categories.any((category) => 
-          product.category.toLowerCase().contains(category.toLowerCase()));
-      }).toList();
+      String normalize(String input) {
+        String s = input.toLowerCase();
+        s = s.replaceAll(' ', '').replaceAll('&', '');
+        s = s
+          .replaceAll('ğ', 'g')
+          .replaceAll('ü', 'u')
+          .replaceAll('ş', 's')
+          .replaceAll('ı', 'i')
+          .replaceAll('ö', 'o')
+          .replaceAll('ç', 'c')
+          .replaceAll('â', 'a')
+          .replaceAll('î', 'i')
+          .replaceAll('û', 'u');
+        return s;
+      }
+
+      final Set<String> normalized = categories.map(normalize).toSet();
+
+      bool matchesSelectedCategories(Product product) {
+        bool include = false;
+        if (normalized.contains('meyvesebzeler')) {
+          include = include || product.categoryId == 1 || product.categoryId == 2;
+        }
+        if (normalized.contains('yaglar')) {
+          include = include || product.categoryId == 7;
+        }
+        if (normalized.contains('etbalik')) {
+          include = include || product.categoryId == 4;
+        }
+        if (normalized.contains('unlumamuller')) {
+          include = include || product.categoryId == 5;
+        }
+        if (normalized.contains('suturunleri')) {
+          include = include || product.categoryId == 3;
+        }
+        if (normalized.contains('icecekler')) {
+          include = include || product.categoryId == 8;
+        }
+
+        if (!include) {
+          include = categories.any((category) =>
+            product.category.toLowerCase().contains(category.toLowerCase()));
+        }
+        return include;
+      }
+
+      filteredProducts = filteredProducts.where(matchesSelectedCategories).toList();
     }
 
-    // Marka filtresi (şimdilik basit bir kontrol)
-    if (brands.isNotEmpty) {
-      // Marka bilgisi olmadığı için şimdilik tüm ürünleri geçiriyoruz
-      // Gelecekte Product modeline brand field'ı eklenebilir
-    }
+    // Marka filtresi kaldırıldı / şimdilik kullanılmıyor
 
     return filteredProducts;
   }

@@ -20,22 +20,15 @@ class FilterScreen extends StatefulWidget {
 class _FilterScreenState extends State<FilterScreen> {
   // Selected categories
   final Set<String> selectedCategories = <String>{};
-  final Set<String> selectedBrands = <String>{};
 
   // Available categories
   final List<String> categories = [
-    'Yumurtalar',
-    'Erişte ve Makarna',
-    'Cips ve Kraker',
-    'Fast Food',
-  ];
-
-  // Available brands
-  final List<String> brands = [
-    'Individual Collection',
-    'Cocola',
-    'Ifad',
-    'Kazi Farmas',
+    'Meyve Sebzeler',
+    'Yağlar',
+    'Et & Balık',
+    'Unlu Mamüller',
+    'Süt Ürünleri',
+    'İçecekler',
   ];
 
   @override
@@ -43,7 +36,6 @@ class _FilterScreenState extends State<FilterScreen> {
     super.initState();
     // Initialize with previous selections
     selectedCategories.addAll(widget.initialCategories);
-    selectedBrands.addAll(widget.initialBrands);
   }
 
   @override
@@ -106,31 +98,6 @@ class _FilterScreenState extends State<FilterScreen> {
                       },
                     )),
                     
-                    const SizedBox(height: 24),
-                    
-                    // Brands Section
-                    const Text(
-                      'Marka',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ...brands.map((brand) => _buildCheckboxTile(
-                      title: brand,
-                      value: selectedBrands.contains(brand),
-                      onChanged: (bool? value) {
-                        setState(() {
-                          if (value == true) {
-                            selectedBrands.add(brand);
-                          } else {
-                            selectedBrands.remove(brand);
-                          }
-                        });
-                      },
-                    )),
                   ],
                 ),
               ),
@@ -148,7 +115,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   // Apply filters and go back to search screen
                   Get.back(result: {
                     'categories': selectedCategories.toList(),
-                    'brands': selectedBrands.toList(),
+                    'brands': <String>[],
                   });
                 },
                 style: ElevatedButton.styleFrom(
