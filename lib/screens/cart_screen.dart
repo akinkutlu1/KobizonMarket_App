@@ -8,6 +8,7 @@ import 'home_screen.dart';
 import 'categories_screen.dart';
 import 'favourite_screen.dart';
 import 'profile_screen.dart';
+import 'promo_code_screen.dart';
 
 class CartScreen extends GetView<CartController> {
   const CartScreen({super.key});
@@ -435,7 +436,7 @@ class CartScreen extends GetView<CartController> {
                       width: double.infinity,
                       child: OutlinedButton.icon(
                         onPressed: () {
-                          Get.toNamed('/promo-code');
+                          Get.to(() => const PromoCodeScreen());
                         },
                         icon: const Icon(Icons.local_offer, color: Color(0xFF53B175)),
                         label: const Text(

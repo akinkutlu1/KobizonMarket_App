@@ -44,10 +44,18 @@ class AboutScreen extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Icon(
-                      Icons.shopping_basket,
-                      size: 50,
-                      color: Colors.white,
+                    child: Center(
+                      child: Image.asset(
+                        'assets/images/app_icon.png',
+                        width: 70,
+                        height: 70,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) => const Icon(
+                          Icons.image_not_supported,
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -222,19 +230,19 @@ class AboutScreen extends StatelessWidget {
                   _buildContactItem(
                     icon: Icons.email,
                     title: 'E-posta',
-                    value: 'info@marketapp.com',
+                    value: 'iletisim@kobizon.com.tr',
                   ),
                   SizedBox(height: 16),
                   _buildContactItem(
                     icon: Icons.phone,
                     title: 'Telefon',
-                    value: '+90 212 555 0123',
+                    value: '0 850 346 44 17',
                   ),
                   SizedBox(height: 16),
                   _buildContactItem(
                     icon: Icons.location_on,
                     title: 'Adres',
-                    value: 'İstanbul, Türkiye',
+                    value: 'Çınartepe Mahallesi Adnan Menderes \n Caddesi Teknopark Merkez Binası \n No: 91/C İç Kapı No : 13-14-15',
                   ),
                 ],
               ),
@@ -290,7 +298,7 @@ class AboutScreen extends StatelessWidget {
             // Copyright
             const Center(
               child: Text(
-                '© 2024 Market App. Tüm hakları saklıdır.',
+                '© 2025 Kobizon Market App. Tüm hakları saklıdır.',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
